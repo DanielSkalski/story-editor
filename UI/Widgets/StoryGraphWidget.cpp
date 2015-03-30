@@ -12,46 +12,32 @@ StoryGraphWidget::StoryGraphWidget(QWidget *parent)
 {
     m_StoryManager = new StoryManager();
 
-    QGraphicsScene *scene = new QGraphicsScene(this);
-    scene->setSceneRect(-200, -200, 400, 400);
+    m_Scene = new QGraphicsScene(this);
+    m_Scene->setSceneRect(-200, -200, 400, 400);
 
-    setScene(scene);
+    setScene(m_Scene);
     setCacheMode(CacheBackground);
     setTransformationAnchor(AnchorUnderMouse);
     setRenderHint(QPainter::Antialiasing);
     setMinimumSize(400, 400);
     setWindowTitle(tr("Story Editor"));
 
-    createNodesAndEdges(scene);
+    createNodesAndEdges();
 }
 
-void StoryGraphWidget::createNodesAndEdges(QGraphicsScene *scene)
+void StoryGraphWidget::createNodesAndEdges()
 {
     for (auto situation : m_StoryManager->situations())
     {
-        SituationNode* node = new SituationNode(situation, this);
-        node->setPos(situation->position);
-
-        scene->addItem(node);
-
-        m_SituationNodes.insert(situation->id(), node);
+        addSituation(situation);
     }
 
     for (auto choice : m_StoryManager->choices())
     {
-        SituationNode* sourceNode = m_SituationNodes.value(choice->from()->id());
-        SituationNode* destNode = m_SituationNodes.value(choice->to()->id());
-
-        if (sourceNode != nullptr && destNode != nullptr)
-        {
-            ChoiceEdge* edge = new ChoiceEdge(choice, sourceNode, destNode);
-
-            scene->addItem(edge);
-
-            m_ChoiceEdges.insert(choice->id(), edge);
-        }
+        addChoice(choice);
     }
 }
+
 
 StoryGraphWidget::~StoryGraphWidget()
 {
@@ -89,8 +75,12 @@ void StoryGraphWidget::markSituationAsSelected(Situation *situation)
     }
 
     m_CurrentlySelectedNode = m_SituationNodes.value(situation->id());
-    m_CurrentlySelectedNode->markAsSelected();
-    m_CurrentlySelectedNode->update();
+
+    if (m_CurrentlySelectedNode != nullptr)
+    {
+        m_CurrentlySelectedNode->markAsSelected();
+        m_CurrentlySelectedNode->update();
+    }
 }
 
 void StoryGraphWidget::situationNodeClicked(SituationNode *situationNode)
@@ -103,4 +93,36 @@ void StoryGraphWidget::situationNodeClicked(SituationNode *situationNode)
 void StoryGraphWidget::choiceEdgeClicked(ChoiceEdge *choiceEdge)
 {
 
+}
+
+void StoryGraphWidget::addSituation(Situation *situation)
+{
+    SituationNode* node = new SituationNode(situation, this);
+    node->setPos(situation->position);
+    connect(situation, SIGNAL(idHasChanged(QString,QString)), this, SLOT(situationIdHasChanged(QString,QString)));
+
+    m_Scene->addItem(node);
+
+    m_SituationNodes.insert(situation->id(), node);
+}
+
+void StoryGraphWidget::addChoice(Choice *choice)
+{
+    SituationNode* sourceNode = m_SituationNodes.value(choice->from()->id());
+    SituationNode* destNode = m_SituationNodes.value(choice->to()->id());
+
+    if (sourceNode != nullptr && destNode != nullptr)
+    {
+        ChoiceEdge* edge = new ChoiceEdge(choice, sourceNode, destNode);
+
+        m_Scene->addItem(edge);
+
+        m_ChoiceEdges.insert(choice->id(), edge);
+    }
+}
+
+void StoryGraphWidget::situationIdHasChanged(const QString &oldId, const QString &newId)
+{
+    auto situationNode = m_SituationNodes.take(oldId);
+    m_SituationNodes.insert(newId, situationNode);
 }

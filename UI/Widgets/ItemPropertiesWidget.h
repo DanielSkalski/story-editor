@@ -15,6 +15,8 @@ class ItemPropertiesWidget : public QWidget
     QTextEdit *m_ContentEdit;
     QLineEdit *m_TitleEdit;
 
+    Situation *m_CurrentSituation;
+
 public:
     explicit ItemPropertiesWidget(QWidget *parent = 0);
     ~ItemPropertiesWidget();

@@ -9,12 +9,14 @@ class StoryManager;
 class SituationNode;
 class ChoiceEdge;
 class Situation;
+class Choice;
 
 class StoryGraphWidget : public QGraphicsView
 {
     Q_OBJECT
 
     StoryManager *m_StoryManager;
+    QGraphicsScene *m_Scene;
     QHash<QString, SituationNode *> m_SituationNodes;
     QHash<QString, ChoiceEdge *> m_ChoiceEdges;
 
@@ -25,7 +27,8 @@ public:
     ~StoryGraphWidget();
 
 private:
-    void createNodesAndEdges(QGraphicsScene *scene);
+    void createNodesAndEdges();
+    void addSituationNode(Situation *situation);
 
 protected:
     void drawBackground(QPainter *painter, const QRectF &rect) Q_DECL_OVERRIDE;
@@ -37,6 +40,11 @@ public slots:
     void markSituationAsSelected(Situation *situation);
     void situationNodeClicked(SituationNode *situationNode);
     void choiceEdgeClicked(ChoiceEdge *choiceEdge);
+    void addSituation(Situation *situation);
+    void addChoice(Choice *choice);
+
+private slots:
+    void situationIdHasChanged(const QString& oldId, const QString& newId);
 };
 
 #endif // STORYGRAPHWIDGET_H

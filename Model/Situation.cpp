@@ -1,6 +1,7 @@
 #include "Situation.h"
 
-Situation::Situation()
+Situation::Situation(QObject *parent)
+    : QObject(parent)
 {
 }
 
@@ -31,17 +32,32 @@ QList<Choice *> Situation::choices() const
 
 void Situation::setId(const QString &id)
 {
-    m_Id = id;
+    if (m_Id != id)
+    {
+        QString oldId = m_Id;
+        m_Id = id;
+
+        emit idHasChanged(oldId, id);
+        emit idHasChanged(id);
+    }
 }
 
 void Situation::setTitle(const QString &title)
 {
-    m_Title = title;
+    if (m_Title != title)
+    {
+        m_Title = title;
+        emit titleHasChanged(title);
+    }
 }
 
 void Situation::setContent(const QString &content)
 {
-    m_Content = content;
+    if (m_Content != content)
+    {
+        m_Content = content;
+        emit contentHasChanged(content);
+    }
 }
 
 void Situation::addChoice(Choice * const &choice)
