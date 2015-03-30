@@ -34,6 +34,26 @@ int SituationNode::height() const
     return m_Height;
 }
 
+Situation *SituationNode::situation() const
+{
+    return m_Situation;
+}
+
+void SituationNode::markAsSelected()
+{
+    m_IsSelected = true;
+}
+
+void SituationNode::unmarkAsSelected()
+{
+    m_IsSelected = false;
+}
+
+bool SituationNode::isSelected() const
+{
+    return m_IsSelected;
+}
+
 QRectF SituationNode::boundingRect() const
 {
     qreal adjust = 2;
@@ -45,11 +65,19 @@ void SituationNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     Q_UNUSED(option)
     Q_UNUSED(widget)
 
-    painter->setPen(Qt::black);
+    if (m_IsSelected)
+    {
+        painter->setPen(Qt::blue);
+    }
+    else
+    {
+        painter->setPen(Qt::black);
+    }
+
     painter->setBrush(Qt::white);
     painter->drawRect(0, 0, m_Width, m_Height);
 
-    painter->setPen(Qt::blue);
+    // painter->setPen(Qt::blue);
     painter->drawText(QRectF(6, 6, m_Width - 6, 20), m_Situation->id());
 }
 
@@ -64,4 +92,10 @@ QVariant SituationNode::itemChange(QGraphicsItem::GraphicsItemChange change, con
     }
 
     return QGraphicsItem::itemChange(change, value);
+}
+
+void SituationNode::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    m_StoryGraphWidget->situationNodeClicked(this);
+    QGraphicsItem::mousePressEvent(event);
 }

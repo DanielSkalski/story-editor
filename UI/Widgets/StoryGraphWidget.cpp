@@ -79,3 +79,28 @@ void StoryGraphWidget::drawBackground(QPainter *painter, const QRectF &rect)
     painter->setBrush(Qt::NoBrush);
     painter->drawRect(sceneRect);
 }
+
+void StoryGraphWidget::markSituationAsSelected(Situation *situation)
+{
+    if (m_CurrentlySelectedNode != nullptr)
+    {
+        m_CurrentlySelectedNode->unmarkAsSelected();
+        m_CurrentlySelectedNode->update();
+    }
+
+    m_CurrentlySelectedNode = m_SituationNodes.value(situation->id());
+    m_CurrentlySelectedNode->markAsSelected();
+    m_CurrentlySelectedNode->update();
+}
+
+void StoryGraphWidget::situationNodeClicked(SituationNode *situationNode)
+{
+    markSituationAsSelected(situationNode->situation());
+
+    emit situationSelectionChanged(situationNode->situation());
+}
+
+void StoryGraphWidget::choiceEdgeClicked(ChoiceEdge *choiceEdge)
+{
+
+}
