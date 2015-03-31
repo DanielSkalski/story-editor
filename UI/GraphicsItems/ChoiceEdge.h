@@ -28,6 +28,8 @@ protected:
     QRectF boundingRect() const Q_DECL_OVERRIDE;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) Q_DECL_OVERRIDE;
 
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) Q_DECL_OVERRIDE;
+
 private:
     void determineEdgeEndPointsOffsets(QPointF& sourceOffset, QPointF& destOffset, const QLineF& line);
     QPolygonF createArrow(const QLineF& line) const;

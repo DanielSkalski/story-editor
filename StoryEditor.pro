@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     UI/GraphicsItems/SituationNode.cpp \
     UI/GraphicsItems/ChoiceEdge.cpp \
     Model/StoryManager.cpp \
-    UI/Widgets/ItemPropertiesWidget.cpp
+    UI/Widgets/ItemPropertiesWidget.cpp \
+    Model/ContentModelBase.cpp
 
 HEADERS  += UI/mainwindow.h \
     UI/Widgets/StoryGraphWidget.h \
@@ -30,4 +31,5 @@ HEADERS  += UI/mainwindow.h \
     UI/GraphicsItems/SituationNode.h \
     UI/GraphicsItems/ChoiceEdge.h \
     Model/StoryManager.h \
-    UI/Widgets/ItemPropertiesWidget.h
+    UI/Widgets/ItemPropertiesWidget.h \
+    Model/ContentModelBase.h

@@ -1,18 +1,13 @@
 #include "Situation.h"
 
 Situation::Situation(QObject *parent)
-    : QObject(parent)
+    : ContentModelBase(parent)
 {
 }
 
-Situation::Situation(QString id, QString title, QString content)
-    : m_Id(id), m_Title(title), m_Content(content)
+Situation::Situation(const QString &id, const QString &title, const QString &content, QObject *parent)
+    : ContentModelBase(id, content, parent), m_Title(title)
 {
-}
-
-QString Situation::id() const
-{
-    return m_Id;
 }
 
 QString Situation::title() const
@@ -20,26 +15,9 @@ QString Situation::title() const
     return m_Title;
 }
 
-QString Situation::content() const
-{
-    return m_Content;
-}
-
 QList<Choice *> Situation::choices() const
 {
     return m_Choices;
-}
-
-void Situation::setId(const QString &id)
-{
-    if (m_Id != id)
-    {
-        QString oldId = m_Id;
-        m_Id = id;
-
-        emit idHasChanged(oldId, id);
-        emit idHasChanged(id);
-    }
 }
 
 void Situation::setTitle(const QString &title)
@@ -48,15 +26,6 @@ void Situation::setTitle(const QString &title)
     {
         m_Title = title;
         emit titleHasChanged(title);
-    }
-}
-
-void Situation::setContent(const QString &content)
-{
-    if (m_Content != content)
-    {
-        m_Content = content;
-        emit contentHasChanged(content);
     }
 }
 

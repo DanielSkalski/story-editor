@@ -110,6 +110,11 @@ void ChoiceEdge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     painter->drawPolygon(arrow);
 }
 
+void ChoiceEdge::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+
+}
+
 QPolygonF ChoiceEdge::createArrow(const QLineF& line) const
 {
     qreal arrowSize = 10;
