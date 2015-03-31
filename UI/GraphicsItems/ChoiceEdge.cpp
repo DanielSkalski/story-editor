@@ -10,8 +10,8 @@
 static const double Pi = 3.14159265358979323846264338327950288419717;
 static double TwoPi = 2.0 * Pi;
 
-ChoiceEdge::ChoiceEdge(Choice *choice, SituationNode *sourceNode, SituationNode* destNode)
-    : m_Choice(choice), m_SourceNode(sourceNode), m_DestNode(destNode)
+ChoiceEdge::ChoiceEdge(Choice *choice, SituationNode *sourceNode, SituationNode* destNode, QGraphicsItem *parent)
+    : StoryGraphItemBase(parent), Selectable(), m_Choice(choice), m_SourceNode(sourceNode), m_DestNode(destNode)
 {
     m_SourceNode->addChoiceEdge(this);
     m_DestNode->addChoiceEdge(this);
@@ -42,6 +42,11 @@ void ChoiceEdge::adjust()
     {
         m_SourcePoint = m_DestPoint = line.p1();
     }
+}
+
+Choice *ChoiceEdge::choice() const
+{
+    return m_Choice;
 }
 
 void ChoiceEdge::determineEdgeEndPointsOffsets(QPointF& sourceOffset, QPointF& destOffset, const QLineF& line)
@@ -101,18 +106,21 @@ void ChoiceEdge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     if (qFuzzyCompare(line.length(), qreal(0.)))
         return;
 
-    painter->setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    QColor color = Qt::black;
+    if (m_IsSelected)
+    {
+        color = Qt::blue;
+    }
+
+    QPen pen = QPen(color, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+
+    painter->setPen(pen);
     painter->drawLine(line);
 
     QPolygonF arrow = createArrow(line);
 
-    painter->setBrush(Qt::black);
+    painter->setBrush(color);
     painter->drawPolygon(arrow);
-}
-
-void ChoiceEdge::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-
 }
 
 QPolygonF ChoiceEdge::createArrow(const QLineF& line) const

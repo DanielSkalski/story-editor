@@ -8,7 +8,7 @@
 
 
 StoryGraphWidget::StoryGraphWidget(QWidget *parent)
-    : QGraphicsView(parent)
+    : QGraphicsView(parent), m_CurrentlySelectedItem(nullptr)
 {
     m_StoryManager = new StoryManager();
 
@@ -68,38 +68,43 @@ void StoryGraphWidget::drawBackground(QPainter *painter, const QRectF &rect)
 
 void StoryGraphWidget::markSituationAsSelected(Situation *situation)
 {
-    if (m_CurrentlySelectedNode != nullptr)
-    {
-        m_CurrentlySelectedNode->unmarkAsSelected();
-        m_CurrentlySelectedNode->update();
-    }
-
-    m_CurrentlySelectedNode = m_SituationNodes.value(situation->id());
-
-    if (m_CurrentlySelectedNode != nullptr)
-    {
-        m_CurrentlySelectedNode->markAsSelected();
-        m_CurrentlySelectedNode->update();
-    }
+    Selectable* node = (Selectable *)m_SituationNodes.value(situation->id());
+    markAsSelected(node);
 }
 
-void StoryGraphWidget::situationNodeClicked(SituationNode *situationNode)
+void StoryGraphWidget::markChoiceAsSelected(Choice *choice)
 {
-    markSituationAsSelected(situationNode->situation());
-
-    emit situationSelectionChanged(situationNode->situation());
+    Selectable* edge = (Selectable *)m_ChoiceEdges.value(choice->id());
+    markAsSelected(edge);
 }
 
-void StoryGraphWidget::choiceEdgeClicked(ChoiceEdge *choiceEdge)
+void StoryGraphWidget::markAsSelected(Selectable *item)
 {
+    if (m_CurrentlySelectedItem != nullptr)
+    {
+        m_CurrentlySelectedItem->unmarkAsSelected();
+        dynamic_cast<QGraphicsObject *>(m_CurrentlySelectedItem)->update();
+    }
 
+    m_CurrentlySelectedItem = item;
+
+    if (m_CurrentlySelectedItem != nullptr)
+    {
+        m_CurrentlySelectedItem->markAsSelected();
+        dynamic_cast<QGraphicsObject *>(m_CurrentlySelectedItem)->update();
+    }
 }
 
 void StoryGraphWidget::addSituation(Situation *situation)
 {
-    SituationNode* node = new SituationNode(situation, this);
+    SituationNode *node = new SituationNode(situation, this);
     node->setPos(situation->position);
+
     connect(situation, SIGNAL(idHasChanged(QString,QString)), this, SLOT(situationIdHasChanged(QString,QString)));
+    connect(node, &SituationNode::mouseLeftButtonClicked, [=]
+    {
+        situationNodeClicked(node);
+    });
 
     m_Scene->addItem(node);
 
@@ -108,12 +113,18 @@ void StoryGraphWidget::addSituation(Situation *situation)
 
 void StoryGraphWidget::addChoice(Choice *choice)
 {
-    SituationNode* sourceNode = m_SituationNodes.value(choice->from()->id());
-    SituationNode* destNode = m_SituationNodes.value(choice->to()->id());
+    SituationNode *sourceNode = m_SituationNodes.value(choice->from()->id());
+    SituationNode *destNode = m_SituationNodes.value(choice->to()->id());
 
     if (sourceNode != nullptr && destNode != nullptr)
     {
-        ChoiceEdge* edge = new ChoiceEdge(choice, sourceNode, destNode);
+        ChoiceEdge *edge = new ChoiceEdge(choice, sourceNode, destNode);
+
+        connect(choice, SIGNAL(idHasChanged(QString,QString)), this, SLOT(choiceIdHasChanged(QString,QString)));
+        connect(edge, &ChoiceEdge::mouseLeftButtonClicked, [=]
+        {
+           choiceEdgeClicked(edge);
+        });
 
         m_Scene->addItem(edge);
 
@@ -125,4 +136,26 @@ void StoryGraphWidget::situationIdHasChanged(const QString &oldId, const QString
 {
     auto situationNode = m_SituationNodes.take(oldId);
     m_SituationNodes.insert(newId, situationNode);
+}
+
+void StoryGraphWidget::choiceIdHasChanged(const QString &oldId, const QString &newId)
+{
+    auto choiceEdge = m_ChoiceEdges.take(oldId);
+    m_ChoiceEdges.insert(newId, choiceEdge);
+}
+
+void StoryGraphWidget::situationNodeClicked(SituationNode *situationNode)
+{
+    auto situation = situationNode->situation();
+    markSituationAsSelected(situation);
+
+    emit situationSelectionChanged(situation);
+}
+
+void StoryGraphWidget::choiceEdgeClicked(ChoiceEdge *choiceEdge)
+{
+    auto choice = choiceEdge->choice();
+    markChoiceAsSelected(choice);
+
+    emit choiceSelectionChanged(choice);
 }

@@ -22,7 +22,9 @@ SOURCES += main.cpp\
     UI/GraphicsItems/ChoiceEdge.cpp \
     Model/StoryManager.cpp \
     UI/Widgets/ItemPropertiesWidget.cpp \
-    Model/ContentModelBase.cpp
+    Model/ContentModelBase.cpp \
+    UI/GraphicsItems/Selectable.cpp \
+    UI/GraphicsItems/StoryGraphItemBase.cpp
 
 HEADERS  += UI/mainwindow.h \
     UI/Widgets/StoryGraphWidget.h \
@@ -32,4 +34,6 @@ HEADERS  += UI/mainwindow.h \
     UI/GraphicsItems/ChoiceEdge.h \
     Model/StoryManager.h \
     UI/Widgets/ItemPropertiesWidget.h \
-    Model/ContentModelBase.h
+    Model/ContentModelBase.h \
+    UI/GraphicsItems/Selectable.h \
+    UI/GraphicsItems/StoryGraphItemBase.h

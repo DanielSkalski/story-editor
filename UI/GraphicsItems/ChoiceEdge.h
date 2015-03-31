@@ -3,53 +3,55 @@
 
 
 #include <QGraphicsItem>
-#include "UI/GraphicsItems/SituationNode.h"
+#include "SituationNode.h"
+#include "Selectable.h"
+#include "StoryGraphItemBase.h"
 
 class Choice;
-class SituationNode;
 class StoryGraphWidget;
 
-class ChoiceEdge : public QGraphicsItem
+class ChoiceEdge : public StoryGraphItemBase, public Selectable
 {
-    Choice* m_Choice;
+    Q_OBJECT
 
-    SituationNode* m_SourceNode;
-    SituationNode* m_DestNode;
+    Choice *m_Choice;
+
+    SituationNode *m_SourceNode;
+    SituationNode *m_DestNode;
 
     QPointF m_SourcePoint;
     QPointF m_DestPoint;
 
 public:
-    ChoiceEdge(Choice* choice, SituationNode* sourceNode, SituationNode* destNode);
+    ChoiceEdge(Choice *choice, SituationNode *sourceNode, SituationNode *destNode, QGraphicsItem *parent = 0);
 
     void adjust();
+    Choice *choice() const;
 
 protected:
     QRectF boundingRect() const Q_DECL_OVERRIDE;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) Q_DECL_OVERRIDE;
 
-    void mousePressEvent(QGraphicsSceneMouseEvent *event) Q_DECL_OVERRIDE;
-
 private:
     void determineEdgeEndPointsOffsets(QPointF& sourceOffset, QPointF& destOffset, const QLineF& line);
     QPolygonF createArrow(const QLineF& line) const;
 
-    inline QPointF getBottomPoint(SituationNode * node)
+    inline QPointF getBottomPoint(SituationNode *node) const
     {
         return QPointF(node->width() / 2, node->height());
     }
 
-    inline QPointF getTopPoint(SituationNode * node)
+    inline QPointF getTopPoint(SituationNode *node) const
     {
         return QPointF(node->width() / 2, 0);
     }
 
-    inline QPointF getLeftPoint(SituationNode * node)
+    inline QPointF getLeftPoint(SituationNode *node) const
     {
         return QPointF(0, node->height() / 2);
     }
 
-    inline QPointF getRightPoint(SituationNode * node)
+    inline QPointF getRightPoint(SituationNode *node) const
     {
         return QPointF(node->width(), node->height() / 2);
     }

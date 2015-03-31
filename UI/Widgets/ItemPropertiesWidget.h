@@ -2,10 +2,12 @@
 #define ITEMPROPERTIESWIDGET_H
 
 #include <QWidget>
-#include <QTextEdit>
-#include <QLineEdit>
 
+class QTextEdit;
+class QLineEdit;
 class Situation;
+class Choice;
+class ContentModelBase;
 
 class ItemPropertiesWidget : public QWidget
 {
@@ -15,7 +17,7 @@ class ItemPropertiesWidget : public QWidget
     QTextEdit *m_ContentEdit;
     QLineEdit *m_TitleEdit;
 
-    Situation *m_CurrentSituation;
+    ContentModelBase *m_CurrentItem;
 
 public:
     explicit ItemPropertiesWidget(QWidget *parent = 0);
@@ -24,7 +26,12 @@ public:
 signals:
 
 public slots:
-    void selectedSituationChanged(Situation *situation);
+    void showPropertiesOf(Situation *situation);
+    void showPropertiesOf(Choice *choice);
+
+private:
+    void disconnectCurrentItem();
+    void connectIdAndContentProperties();
 };
 
 #endif // ITEMPROPERTIESWIDGET_H

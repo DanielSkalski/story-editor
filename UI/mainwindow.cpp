@@ -22,5 +22,8 @@ MainWindow::MainWindow(QWidget *parent)
     setCentralWidget(layoutWidget);
 
     connect(m_StoryGraphWidget, SIGNAL(situationSelectionChanged(Situation*)),
-            m_ItemPropertiesWidget, SLOT(selectedSituationChanged(Situation*)));
+            m_ItemPropertiesWidget, SLOT(showPropertiesOf(Situation*)));
+
+    connect(m_StoryGraphWidget, SIGNAL(choiceSelectionChanged(Choice*)),
+            m_ItemPropertiesWidget, SLOT(showPropertiesOf(Choice*)));
 }
