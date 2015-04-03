@@ -35,3 +35,10 @@ Situation *SituationListModel::getItem(const QModelIndex &index) const
 {
     return m_Items.at(index.row());
 }
+
+QModelIndex SituationListModel::getIndex(Situation *situation) const
+{
+    int row = m_Items.indexOf(situation);
+
+    return createIndex(row, 0, situation);
+}

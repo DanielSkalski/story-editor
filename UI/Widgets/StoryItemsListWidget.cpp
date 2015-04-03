@@ -37,12 +37,29 @@ StoryItemsListWidget::StoryItemsListWidget(StoryManager *storyManager, QWidget *
 
 StoryItemsListWidget::~StoryItemsListWidget()
 {
+    delete m_ChoiceListModel;
+    delete m_SituationListModel;
+}
 
+void StoryItemsListWidget::markSituationAsSelected(Situation *situation)
+{
+    m_ChoicesListView->clearSelection();
+    auto index = m_SituationListModel->getIndex(situation);
+    m_SituationsListView->setCurrentIndex(index);
+}
+
+void StoryItemsListWidget::markChoiceAsSelected(Choice *choice)
+{
+    m_SituationsListView->clearSelection();
+    auto index = m_ChoiceListModel->getIndex(choice);
+    m_ChoicesListView->setCurrentIndex(index);
 }
 
 void StoryItemsListWidget::situationClicked(const QModelIndex &modelIndex)
 {
     auto situation = m_SituationListModel->getItem(modelIndex);
+    markSituationAsSelected(situation);
+
     emit situationClicked(situation);
 }
 

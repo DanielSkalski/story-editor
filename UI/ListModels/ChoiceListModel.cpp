@@ -35,3 +35,10 @@ Choice *ChoiceListModel::getItem(const QModelIndex &index) const
 {
     return m_Items.at(index.row());
 }
+
+QModelIndex ChoiceListModel::getIndex(Choice *choice) const
+{
+    int row = m_Items.indexOf(choice);
+
+    return createIndex(row, 0, choice);
+}

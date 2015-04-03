@@ -4,6 +4,7 @@
 #include <QAbstractListModel>
 #include <QList>
 #include <QVariant>
+#include <QModelIndex>
 
 class Situation;
 
@@ -21,6 +22,8 @@ public:
     int rowCount(const QModelIndex &parent) const Q_DECL_OVERRIDE;
 
     Situation *getItem(const QModelIndex &index) const;
+
+    QModelIndex getIndex(Situation *situation) const;
 
 signals:
 

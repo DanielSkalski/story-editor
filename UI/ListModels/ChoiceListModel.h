@@ -22,6 +22,8 @@ public:
 
     Choice *getItem(const QModelIndex &index) const;
 
+    QModelIndex getIndex(Choice *choice) const;
+
 signals:
 
 public slots:

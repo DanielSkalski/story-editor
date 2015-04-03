@@ -30,6 +30,8 @@ signals:
     void choiceClicked(Choice *choice);
 
 public slots:
+    void markSituationAsSelected(Situation *situation);
+    void markChoiceAsSelected(Choice *choice);
 
 private slots:
     void situationClicked(const QModelIndex &modelIndex);

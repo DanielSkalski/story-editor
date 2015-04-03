@@ -38,6 +38,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(m_StoryItemsListWidget, SIGNAL(choiceClicked(Choice*)),
             m_StoryGraphWidget, SLOT(markChoiceAsSelected(Choice*)));
+
+    connect(m_StoryGraphWidget, SIGNAL(situationSelectionChanged(Situation*)),
+            m_StoryItemsListWidget, SLOT(markSituationAsSelected(Situation*)));
+
+    connect(m_StoryGraphWidget, SIGNAL(choiceSelectionChanged(Choice*)),
+            m_StoryItemsListWidget, SLOT(markChoiceAsSelected(Choice*)));
 }
 
 MainWindow::~MainWindow()
