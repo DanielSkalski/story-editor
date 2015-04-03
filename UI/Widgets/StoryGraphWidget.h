@@ -11,6 +11,7 @@ class SituationNode;
 class ChoiceEdge;
 class Situation;
 class Choice;
+class QPoint;
 
 class StoryGraphWidget : public QGraphicsView
 {
@@ -18,14 +19,14 @@ class StoryGraphWidget : public QGraphicsView
 
     StoryManager *m_StoryManager;
     QGraphicsScene *m_Scene;
+
     QHash<QString, SituationNode *> m_SituationNodes;
     QHash<QString, ChoiceEdge *> m_ChoiceEdges;
 
     Selectable *m_CurrentlySelectedItem;
-    QHash<QString, Selectable *> m_SelectableItems;
 
 public:
-    explicit StoryGraphWidget(QWidget *parent = 0);
+    explicit StoryGraphWidget(StoryManager *storyManager,  QWidget *parent = 0);
     ~StoryGraphWidget();
 
 private:
@@ -34,6 +35,7 @@ private:
 
 protected:
     void drawBackground(QPainter *painter, const QRectF &rect) Q_DECL_OVERRIDE;
+    void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
 
 signals:
     void situationSelectionChanged(Situation *situation);
@@ -52,6 +54,8 @@ private slots:
 
     void situationNodeClicked(SituationNode *situationNode);
     void choiceEdgeClicked(ChoiceEdge *choiceEdge);
+
+    void addEmptySituationAt(const QPointF& pos);
 };
 
 #endif // STORYGRAPHWIDGET_H

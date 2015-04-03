@@ -6,14 +6,14 @@
 #include "Model/Situation.h"
 #include "Model/Choice.h"
 
+#include <QMenu>
+#include <QContextMenuEvent>
 
-StoryGraphWidget::StoryGraphWidget(QWidget *parent)
-    : QGraphicsView(parent), m_CurrentlySelectedItem(nullptr)
+StoryGraphWidget::StoryGraphWidget(StoryManager *storyManager, QWidget *parent)
+    : QGraphicsView(parent), m_CurrentlySelectedItem(nullptr), m_StoryManager(storyManager)
 {
-    m_StoryManager = new StoryManager();
-
     m_Scene = new QGraphicsScene(this);
-    m_Scene->setSceneRect(-200, -200, 400, 400);
+//    m_Scene->setSceneRect(-200, -200, 400, 400);
 
     setScene(m_Scene);
     setCacheMode(CacheBackground);
@@ -46,8 +46,6 @@ StoryGraphWidget::~StoryGraphWidget()
 
 void StoryGraphWidget::drawBackground(QPainter *painter, const QRectF &rect)
 {
-    Q_UNUSED(rect);
-
     // Shadow
     QRectF sceneRect = this->sceneRect();
     QRectF rightShadow(sceneRect.right(), sceneRect.top() + 5, 5, sceneRect.height());
@@ -66,16 +64,45 @@ void StoryGraphWidget::drawBackground(QPainter *painter, const QRectF &rect)
     painter->drawRect(sceneRect);
 }
 
+void StoryGraphWidget::contextMenuEvent(QContextMenuEvent *event)
+{
+    if (this->itemAt(event->pos()) == nullptr)
+    {
+        QMenu *menu = new QMenu;
+        QAction *addSituationAction = new QAction(tr("New situation"), menu);
+
+        menu->addAction(addSituationAction);
+
+        connect(addSituationAction, &QAction::triggered, [=]
+        {
+//            auto ePos = event->pos();
+//            auto glPos = event->globalPos();
+//            auto pos = this->mapFromGlobal(glPos);
+//            auto scenePos = this->mapToScene(QRect(pos, QSize(2,2)));
+//            addEmptySituationAt(scenePos.boundingRect().center());
+            addEmptySituationAt(QPointF(0,0));
+        });
+
+        menu->popup(event->globalPos());
+    }
+
+    QGraphicsView::contextMenuEvent(event);
+}
+
 void StoryGraphWidget::markSituationAsSelected(Situation *situation)
 {
     Selectable* node = (Selectable *)m_SituationNodes.value(situation->id());
     markAsSelected(node);
+
+    emit situationSelectionChanged(situation);
 }
 
 void StoryGraphWidget::markChoiceAsSelected(Choice *choice)
 {
     Selectable* edge = (Selectable *)m_ChoiceEdges.value(choice->id());
     markAsSelected(edge);
+
+    emit choiceSelectionChanged(choice);
 }
 
 void StoryGraphWidget::markAsSelected(Selectable *item)
@@ -148,14 +175,18 @@ void StoryGraphWidget::situationNodeClicked(SituationNode *situationNode)
 {
     auto situation = situationNode->situation();
     markSituationAsSelected(situation);
-
-    emit situationSelectionChanged(situation);
 }
 
 void StoryGraphWidget::choiceEdgeClicked(ChoiceEdge *choiceEdge)
 {
     auto choice = choiceEdge->choice();
     markChoiceAsSelected(choice);
+}
 
-    emit choiceSelectionChanged(choice);
+void StoryGraphWidget::addEmptySituationAt(const QPointF &pos)
+{
+    Situation * sit = new Situation;
+    sit->position = pos;
+
+    addSituation(sit);
 }

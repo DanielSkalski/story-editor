@@ -6,13 +6,16 @@
 #include "UI/GraphicsItems/ChoiceEdge.h"
 #include "UI/Widgets/StoryGraphWidget.h"
 
+#include <QMenu>
+#include <QGraphicsSceneContextMenuEvent>
+#include <QMessageBox>
 
 SituationNode::SituationNode(Situation *situation, StoryGraphWidget *storyGraphWidget, QGraphicsItem *parent)
     : StoryGraphItemBase(parent), Selectable(), m_Situation(situation), m_StoryGraphWidget(storyGraphWidget)
 {
     setFlag(ItemIsMovable);
     setFlag(ItemSendsGeometryChanges);
-    setZValue(-1);
+    setZValue(1);
 
     m_Width = 80;
     m_Height = 60;
@@ -75,4 +78,19 @@ QVariant SituationNode::itemChange(QGraphicsItem::GraphicsItemChange change, con
     }
 
     return QGraphicsItem::itemChange(change, value);
+}
+
+void SituationNode::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
+{
+    QMenu *menu = new QMenu;
+    QAction *deleteAction = new QAction("Delete", menu);
+
+    menu->addAction(deleteAction);
+    menu->popup(event->screenPos());
+
+    connect(deleteAction, SIGNAL(triggered()), this, SLOT(deleteNode()));
+}
+
+void SituationNode::deleteNode()
+{
 }

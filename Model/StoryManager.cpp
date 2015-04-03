@@ -58,3 +58,17 @@ QVector<Choice *> StoryManager::choices() const
 {
     return m_Choices;
 }
+
+void StoryManager::addSituation(Situation *situation)
+{
+    m_Situations << situation;
+
+    emit addedSituation(situation);
+}
+
+void StoryManager::addChoice(Choice *choice)
+{
+    m_Choices << choice;
+
+    emit addedChoice(choice);
+}
