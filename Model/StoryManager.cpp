@@ -2,6 +2,7 @@
 #include "Situation.h"
 #include "Choice.h"
 #include <QString>
+#include <QStringList>
 
 StoryManager::StoryManager()
 {
@@ -59,6 +60,53 @@ QVector<Choice *> StoryManager::choices() const
     return m_Choices;
 }
 
+QString StoryManager::findNextAvailableSituationId() const
+{
+    QString result;
+    QString defaultSituationId = "Situation";
+    QList<Situation *> elementsWithIdThatBeginsWithDefaultValue;
+
+    for (Situation *situation : m_Situations)
+    {
+        if (situation->id().startsWith(defaultSituationId))
+        {
+            elementsWithIdThatBeginsWithDefaultValue.append(situation);
+        }
+    }
+
+    if (elementsWithIdThatBeginsWithDefaultValue.count() > 0)
+    {
+        int highestIdNumber = 0;
+
+        for (Situation *situation : elementsWithIdThatBeginsWithDefaultValue)
+        {
+            QStringList idParts = situation->id().split(" ");
+            if (idParts.count() == 2)
+            {
+                bool isNumber = false;
+                int idNum = idParts[1].toInt(&isNumber);
+                if (isNumber)
+                {
+                   if (idNum > highestIdNumber)
+                   {
+                       highestIdNumber = idNum;
+                   }
+                }
+            }
+        }
+
+        int nextIdNumber = highestIdNumber + 1;
+
+        result = defaultSituationId + " " + QString::number(nextIdNumber);
+    }
+    else
+    {
+        result = defaultSituationId;
+    }
+
+    return result;
+}
+
 void StoryManager::addSituation(Situation *situation)
 {
     m_Situations << situation;
@@ -71,4 +119,16 @@ void StoryManager::addChoice(Choice *choice)
     m_Choices << choice;
 
     emit addedChoice(choice);
+}
+
+void StoryManager::createEmptySituation()
+{
+    QString situationId = findNextAvailableSituationId();
+
+    Situation *emptySituation = new Situation(situationId, "", "");
+    emptySituation->position = QPointF(0, 0);
+
+    m_Situations << emptySituation;
+
+    emit addedSituation(emptySituation);
 }

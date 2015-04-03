@@ -42,3 +42,10 @@ QModelIndex SituationListModel::getIndex(Situation *situation) const
 
     return createIndex(row, 0, situation);
 }
+
+void SituationListModel::addItem(Situation *situation)
+{
+    beginInsertRows(QModelIndex(), m_Items.count(), m_Items.count());
+    m_Items.append(situation);
+    endInsertRows();
+}

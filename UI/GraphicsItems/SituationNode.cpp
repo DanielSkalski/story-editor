@@ -75,6 +75,8 @@ QVariant SituationNode::itemChange(QGraphicsItem::GraphicsItemChange change, con
         {
             edge->adjust();
         }
+
+        m_Situation->position = this->pos();
     }
 
     return QGraphicsItem::itemChange(change, value);

@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QListView>
+#include <QPushButton>
 
 class StoryManager;
 class SituationListModel;
@@ -15,8 +16,10 @@ class StoryItemsListWidget : public QWidget
     Q_OBJECT
 
     StoryManager *m_StoryManager;
+
     QListView *m_ChoicesListView;
     QListView *m_SituationsListView;
+    QPushButton *m_CreateSituationButton;
 
     SituationListModel *m_SituationListModel;
     ChoiceListModel *m_ChoiceListModel;
@@ -33,9 +36,13 @@ public slots:
     void markSituationAsSelected(Situation *situation);
     void markChoiceAsSelected(Choice *choice);
 
+    void addSituation(Situation *situation);
+
 private slots:
     void situationClicked(const QModelIndex &modelIndex);
     void choiceClicked(const QModelIndex &modelIndex);
+
+    void createSituationButtonClicked();
 };
 
 #endif // STORYITEMSLISTWIDGET_H

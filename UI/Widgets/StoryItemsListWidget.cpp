@@ -17,6 +17,8 @@ StoryItemsListWidget::StoryItemsListWidget(StoryManager *storyManager, QWidget *
     m_ChoicesListView = new QListView(this);
     m_SituationsListView = new QListView(this);
 
+    m_CreateSituationButton = new QPushButton(tr("Create"), this);
+
     auto choicesList = m_StoryManager->choices().toList();
     m_ChoiceListModel = new ChoiceListModel(choicesList);
     m_ChoicesListView->setModel(m_ChoiceListModel);
@@ -27,10 +29,15 @@ StoryItemsListWidget::StoryItemsListWidget(StoryManager *storyManager, QWidget *
 
     auto layout = new QVBoxLayout();
     layout->addWidget(m_SituationsListView);
+    layout->addWidget(m_CreateSituationButton);
     layout->addWidget(m_ChoicesListView);
 
     connect(m_SituationsListView, SIGNAL(clicked(QModelIndex)), this, SLOT(situationClicked(QModelIndex)));
     connect(m_ChoicesListView, SIGNAL(clicked(QModelIndex)), this, SLOT(choiceClicked(QModelIndex)));
+
+    connect(m_CreateSituationButton, SIGNAL(clicked()), this, SLOT(createSituationButtonClicked()));
+
+    connect(m_StoryManager, SIGNAL(addedSituation(Situation*)), this, SLOT(addSituation(Situation*)));
 
     setLayout(layout);
 }
@@ -55,6 +62,11 @@ void StoryItemsListWidget::markChoiceAsSelected(Choice *choice)
     m_ChoicesListView->setCurrentIndex(index);
 }
 
+void StoryItemsListWidget::addSituation(Situation *situation)
+{
+    m_SituationListModel->addItem(situation);
+}
+
 void StoryItemsListWidget::situationClicked(const QModelIndex &modelIndex)
 {
     auto situation = m_SituationListModel->getItem(modelIndex);
@@ -67,4 +79,9 @@ void StoryItemsListWidget::choiceClicked(const QModelIndex &modelIndex)
 {
     auto choice = m_ChoiceListModel->getItem(modelIndex);
     emit choiceClicked(choice);
+}
+
+void StoryItemsListWidget::createSituationButtonClicked()
+{
+    m_StoryManager->createEmptySituation();
 }

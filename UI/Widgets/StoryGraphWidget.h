@@ -29,13 +29,15 @@ public:
     explicit StoryGraphWidget(StoryManager *storyManager,  QWidget *parent = 0);
     ~StoryGraphWidget();
 
-private:
-    void createNodesAndEdges();
-    void markAsSelected(Selectable *item);
-
 protected:
     void drawBackground(QPainter *painter, const QRectF &rect) Q_DECL_OVERRIDE;
     void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
+
+private:
+    void createNodesAndEdges();
+    void markAsSelected(Selectable *item);
+    void createSituationNode(Situation *situation);
+    void createChoiceEdge(Choice *choice);
 
 signals:
     void situationSelectionChanged(Situation *situation);
