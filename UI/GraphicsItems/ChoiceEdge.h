@@ -22,6 +22,9 @@ class ChoiceEdge : public StoryGraphItemBase, public Selectable
     QPointF m_SourcePoint;
     QPointF m_DestPoint;
 
+    qreal m_ArrowSize;
+    qreal m_LineWidth;
+
 public:
     ChoiceEdge(Choice *choice, SituationNode *sourceNode, SituationNode *destNode, QGraphicsItem *parent = 0);
 
@@ -30,6 +33,7 @@ public:
 
 protected:
     QRectF boundingRect() const Q_DECL_OVERRIDE;
+    QPainterPath shape() const Q_DECL_OVERRIDE;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) Q_DECL_OVERRIDE;
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) Q_DECL_OVERRIDE;
 

@@ -13,7 +13,8 @@ static const double Pi = 3.14159265358979323846264338327950288419717;
 static double TwoPi = 2.0 * Pi;
 
 ChoiceEdge::ChoiceEdge(Choice *choice, SituationNode *sourceNode, SituationNode* destNode, QGraphicsItem *parent)
-    : StoryGraphItemBase(parent), Selectable(), m_Choice(choice), m_SourceNode(sourceNode), m_DestNode(destNode)
+    : StoryGraphItemBase(parent), Selectable(), m_Choice(choice), m_SourceNode(sourceNode), m_DestNode(destNode),
+      m_ArrowSize(20), m_LineWidth(1)
 {
     m_SourceNode->addChoiceEdge(this);
     m_DestNode->addChoiceEdge(this);
@@ -86,14 +87,30 @@ QRectF ChoiceEdge::boundingRect() const
     if (m_SourceNode == nullptr || m_DestNode == nullptr)
         return QRectF();
 
-    qreal penWidth = 1;
-    qreal arrowSize = 10;
-    qreal extra = (penWidth + arrowSize) / 2.0;
+    qreal extra = (m_LineWidth + m_ArrowSize) / 2.0;
 
-    return QRectF(m_SourcePoint, QSizeF(m_DestPoint.x() - m_SourcePoint.x(),
-                                      m_DestPoint.y() - m_SourcePoint.y()))
-        .normalized()
-        .adjusted(-extra, -extra, extra, extra);
+    QSizeF rectSize = QSizeF(m_DestPoint.x() - m_SourcePoint.x(),
+                             m_DestPoint.y() - m_SourcePoint.y());
+
+    QRectF rect = QRectF(m_SourcePoint, rectSize)
+                    .normalized()
+                    .adjusted(-extra, -extra, extra, extra);
+
+    return rect;
+}
+
+QPainterPath ChoiceEdge::shape() const
+{
+    QPainterPath path;
+    path.moveTo(m_SourcePoint);
+    path.lineTo(m_DestPoint);
+
+    QPainterPathStroker pathStroker;
+    pathStroker.setWidth(m_ArrowSize);
+
+    QPainterPath resultPath = pathStroker.createStroke(path);
+
+    return resultPath;
 }
 
 void ChoiceEdge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
