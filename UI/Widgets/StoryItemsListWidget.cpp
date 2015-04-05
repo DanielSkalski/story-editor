@@ -12,7 +12,8 @@
 StoryItemsListWidget::StoryItemsListWidget(StoryManager *storyManager, QWidget *parent)
     : QWidget(parent), m_StoryManager(storyManager)
 {
-    setMinimumSize(300, 100);
+    setMinimumSize(150, 200);
+    setMaximumWidth(300);
 
     m_ChoicesListView = new QListView(this);
     m_SituationsListView = new QListView(this);

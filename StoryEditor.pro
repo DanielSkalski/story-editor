@@ -27,7 +27,10 @@ SOURCES += main.cpp\
     UI/GraphicsItems/StoryGraphItemBase.cpp \
     UI/Widgets/StoryItemsListWidget.cpp \
     UI/ListModels/ChoiceListModel.cpp \
-    UI/ListModels/SituationListModel.cpp
+    UI/ListModels/SituationListModel.cpp \
+    UI/Widgets/PropertiesWidgets/SituationPropertiesWidget.cpp \
+    UI/Widgets/PropertiesWidgets/ChoicePropertiesWidget.cpp \
+    UI/Widgets/PropertiesWidgets/ContentModelPropertiesWidget.cpp
 
 HEADERS  += UI/mainwindow.h \
     UI/Widgets/StoryGraphWidget.h \
@@ -42,4 +45,7 @@ HEADERS  += UI/mainwindow.h \
     UI/GraphicsItems/StoryGraphItemBase.h \
     UI/Widgets/StoryItemsListWidget.h \
     UI/ListModels/ChoiceListModel.h \
-    UI/ListModels/SituationListModel.h
+    UI/ListModels/SituationListModel.h \
+    UI/Widgets/PropertiesWidgets/SituationPropertiesWidget.h \
+    UI/Widgets/PropertiesWidgets/ChoicePropertiesWidget.h \
+    UI/Widgets/PropertiesWidgets/ContentModelPropertiesWidget.h

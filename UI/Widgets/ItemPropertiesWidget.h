@@ -3,21 +3,17 @@
 
 #include <QWidget>
 
-class QTextEdit;
-class QLineEdit;
-class Situation;
 class Choice;
-class ContentModelBase;
+class Situation;
+class ChoicePropertiesWidget;
+class SituationPropertiesWidget;
 
 class ItemPropertiesWidget : public QWidget
 {
     Q_OBJECT
 
-    QLineEdit *m_IdEdit;
-    QTextEdit *m_ContentEdit;
-    QLineEdit *m_TitleEdit;
-
-    ContentModelBase *m_CurrentItem;
+    ChoicePropertiesWidget *m_ChoiceProperties;
+    SituationPropertiesWidget *m_SituationProperties;
 
 public:
     explicit ItemPropertiesWidget(QWidget *parent = 0);
@@ -28,10 +24,6 @@ signals:
 public slots:
     void showPropertiesOf(Situation *situation);
     void showPropertiesOf(Choice *choice);
-
-private:
-    void disconnectCurrentItem();
-    void connectIdAndContentProperties();
 };
 
 #endif // ITEMPROPERTIESWIDGET_H
