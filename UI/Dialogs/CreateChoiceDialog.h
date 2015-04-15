@@ -9,6 +9,7 @@ class StoryManager;
 class QLineEdit;
 class QTextEdit;
 class QComboBox;
+class QLabel;
 
 class CreateChoiceDialog : public QDialog
 {
@@ -16,9 +17,7 @@ class CreateChoiceDialog : public QDialog
 
     StoryManager *m_StoryManager;
 
-    Situation *m_From;
-    Situation *m_To;
-    Choice *m_CreatedChoice;
+    QLabel *m_Errors;
 
     QComboBox *m_FromComboBox;
     QComboBox *m_ToComboBox;
@@ -36,6 +35,7 @@ public:
 private:
     void setupLayout();
     void populateComboBoxes();
+    Situation *getSelectedSituation(QComboBox *comboBox);
 
 signals:
 

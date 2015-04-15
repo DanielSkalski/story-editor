@@ -3,6 +3,7 @@
 #include "Model/Situation.h"
 #include "Model/Choice.h"
 #include "Model/StoryManager.h"
+#include "Model/Validators/ValidationResult.h"
 
 #include <QLineEdit>
 #include <QTextEdit>
@@ -16,6 +17,17 @@
 CreateChoiceDialog::CreateChoiceDialog(StoryManager *storyManager, QWidget *parent)
     : QDialog(parent), m_StoryManager(storyManager)
 {
+    m_Errors = new QLabel(this);
+
+    m_FromComboBox = new QComboBox(this);
+    m_ToComboBox = new QComboBox(this);
+
+    m_IdEdit = new QLineEdit(this);
+    m_ContentEdit = new QTextEdit(this);
+
+    m_CreateButton = new QPushButton(tr("Create"), this);
+    m_CancelButton = new QPushButton(tr("Cancel"), this);
+
     setupLayout();
 
     populateComboBoxes();
@@ -38,39 +50,41 @@ void CreateChoiceDialog::setupLayout()
     QLabel *fromLabel = new QLabel(tr("From"), this);
     QLabel *toLabel = new QLabel(tr("To"), this);
 
-    m_FromComboBox = new QComboBox(this);
-    m_ToComboBox = new QComboBox(this);
+    QPalette palette;
+    palette.setColor(QPalette::WindowText, Qt::red);
+    m_Errors->setPalette(palette);
+    m_Errors->hide();
 
-    m_IdEdit = new QLineEdit(this);
-    m_ContentEdit = new QTextEdit(this);
-
-    m_CreateButton = new QPushButton(tr("Create"), this);
-    m_CancelButton = new QPushButton(tr("Cancel"), this);
+    QVBoxLayout *layout = new QVBoxLayout();
 
     QHBoxLayout *buttonsLayout = new QHBoxLayout();
     buttonsLayout->addWidget(m_CreateButton);
     buttonsLayout->addWidget(m_CancelButton);
 
-    QGridLayout *layout = new QGridLayout();
-    layout->addWidget(fromLabel, 0, 0);
-    layout->addWidget(m_FromComboBox, 0, 1);
-    layout->addWidget(toLabel, 1, 0);
-    layout->addWidget(m_ToComboBox, 1, 1);
-    layout->addWidget(idLabel, 2, 0);
-    layout->addWidget(m_IdEdit, 2, 1);
-    layout->addWidget(contentLabel, 3, 0, 1, 1, Qt::AlignTop);
-    layout->addWidget(m_ContentEdit, 3, 1);
+    QGridLayout *formLayout = new QGridLayout();
+    formLayout->addWidget(fromLabel, 0, 0);
+    formLayout->addWidget(m_FromComboBox, 0, 1);
+    formLayout->addWidget(toLabel, 1, 0);
+    formLayout->addWidget(m_ToComboBox, 1, 1);
+    formLayout->addWidget(idLabel, 2, 0);
+    formLayout->addWidget(m_IdEdit, 2, 1);
+    formLayout->addWidget(contentLabel, 3, 0, 1, 1, Qt::AlignTop);
+    formLayout->addWidget(m_ContentEdit, 3, 1);
 
-    layout->addLayout(buttonsLayout, 4, 0, 1, 2, Qt::AlignJustify);
+    layout->addWidget(m_Errors);
+    layout->addLayout(formLayout);
+    layout->addLayout(buttonsLayout);
 
     setLayout(layout);
 }
 
 void CreateChoiceDialog::populateComboBoxes()
 {
-    auto situations = m_StoryManager->situations().toList();
+    auto situations = m_StoryManager->situations();
 
     QStringList situationsTexts;
+    situationsTexts.append(tr("None"));
+
     for (Situation *sit : situations)
     {
         situationsTexts.append(sit->id());
@@ -78,6 +92,19 @@ void CreateChoiceDialog::populateComboBoxes()
 
     m_FromComboBox->addItems(situationsTexts);
     m_ToComboBox->addItems(situationsTexts);
+}
+
+Situation *CreateChoiceDialog::getSelectedSituation(QComboBox *comboBox)
+{
+    Situation *result = nullptr;
+
+    if (comboBox->currentIndex() > 0) // Not "None" option is selected.
+    {
+        QString selectedId = comboBox->currentText();
+        result = m_StoryManager->findSituationById(selectedId);
+    }
+
+    return result;
 }
 
 void CreateChoiceDialog::idEditTextChanged()
@@ -94,18 +121,32 @@ void CreateChoiceDialog::createButtonClicked()
 {
     QString id = m_IdEdit->text();
     QString content = m_ContentEdit->toPlainText();
-    QString fromId = m_FromComboBox->currentText();
-    Situation *from = m_StoryManager->findSituationById(fromId);
-    QString toId = m_ToComboBox->currentText();
-    Situation *to = m_StoryManager->findSituationById(toId);
+    Situation *from = getSelectedSituation(m_FromComboBox);
+    Situation *to = getSelectedSituation(m_ToComboBox);
 
     Choice *choice = new Choice(id, content);
     choice->setFrom(from);
     choice->setTo(to);
 
-    m_StoryManager->addChoice(choice);
+    ValidationResult validationResult = m_StoryManager->ValidateChoice(choice);
 
-    this->close();
+    if (validationResult.isCorrect())
+    {
+        m_StoryManager->addChoice(choice);
+        this->close();
+    }
+    else
+    {
+        QString errors;
+        for(auto error : validationResult.allErrors())
+        {
+            errors.append(error + "\n");
+        }
+
+        m_Errors->setText(errors);
+
+        m_Errors->show();
+    }
 }
 
 void CreateChoiceDialog::cancelButtonClicked()

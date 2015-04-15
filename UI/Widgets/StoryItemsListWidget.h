@@ -30,6 +30,9 @@ public:
     explicit StoryItemsListWidget(StoryManager *storyManager, QWidget *parent = 0);
     ~StoryItemsListWidget();
 
+private:
+    void setupLayout();
+
 signals:
     void situationClicked(Situation *situation);
     void choiceClicked(Choice *choice);

@@ -16,22 +16,42 @@
 StoryItemsListWidget::StoryItemsListWidget(StoryManager *storyManager, QWidget *parent)
     : QWidget(parent), m_StoryManager(storyManager)
 {
-    setMinimumSize(150, 200);
-    setMaximumWidth(300);
-
     m_ChoicesListView = new QListView(this);
     m_SituationsListView = new QListView(this);
 
     m_CreateSituationButton = new QPushButton(tr("Create"), this);
     m_CreateChoiceButton = new QPushButton(tr("Create"), this);
 
-    auto choicesList = m_StoryManager->choices().toList();
+    auto choicesList = m_StoryManager->choices();
     m_ChoiceListModel = new ChoiceListModel(choicesList);
     m_ChoicesListView->setModel(m_ChoiceListModel);
 
-    auto situations = m_StoryManager->situations().toList();
+    auto situations = m_StoryManager->situations();
     m_SituationListModel = new SituationListModel(situations);
     m_SituationsListView->setModel(m_SituationListModel);
+
+    setupLayout();
+
+    connect(m_SituationsListView, SIGNAL(clicked(QModelIndex)), this, SLOT(situationClicked(QModelIndex)));
+    connect(m_ChoicesListView, SIGNAL(clicked(QModelIndex)), this, SLOT(choiceClicked(QModelIndex)));
+
+    connect(m_CreateSituationButton, SIGNAL(clicked()), this, SLOT(createSituationButtonClicked()));
+    connect(m_CreateChoiceButton, SIGNAL(clicked()), this, SLOT(createChoiceButtonClicked()));
+
+    connect(m_StoryManager, SIGNAL(addedSituation(Situation*)), this, SLOT(addSituation(Situation*)));
+    connect(m_StoryManager, SIGNAL(addedChoice(Choice*)), this, SLOT(addChoice(Choice *)));
+}
+
+StoryItemsListWidget::~StoryItemsListWidget()
+{
+    delete m_ChoiceListModel;
+    delete m_SituationListModel;
+}
+
+void StoryItemsListWidget::setupLayout()
+{
+    setMinimumSize(150, 200);
+    setMaximumWidth(300);
 
     QGroupBox *situationsGroup = new QGroupBox(tr("Situations"), this);
     QGroupBox *choicesGroup = new QGroupBox(tr("Choices"), this);
@@ -51,21 +71,6 @@ StoryItemsListWidget::StoryItemsListWidget(StoryManager *storyManager, QWidget *
     layout->addWidget(choicesGroup);
 
     setLayout(layout);
-
-    connect(m_SituationsListView, SIGNAL(clicked(QModelIndex)), this, SLOT(situationClicked(QModelIndex)));
-    connect(m_ChoicesListView, SIGNAL(clicked(QModelIndex)), this, SLOT(choiceClicked(QModelIndex)));
-
-    connect(m_CreateSituationButton, SIGNAL(clicked()), this, SLOT(createSituationButtonClicked()));
-    connect(m_CreateChoiceButton, SIGNAL(clicked()), this, SLOT(createChoiceButtonClicked()));
-
-    connect(m_StoryManager, SIGNAL(addedSituation(Situation*)), this, SLOT(addSituation(Situation*)));
-    connect(m_StoryManager, SIGNAL(addedChoice(Choice*)), this, SLOT(addChoice(Choice *)));
-}
-
-StoryItemsListWidget::~StoryItemsListWidget()
-{
-    delete m_ChoiceListModel;
-    delete m_SituationListModel;
 }
 
 void StoryItemsListWidget::markSituationAsSelected(Situation *situation)

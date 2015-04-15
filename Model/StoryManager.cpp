@@ -1,7 +1,12 @@
 #include "StoryManager.h"
+
 #include "Situation.h"
 #include "Choice.h"
+#include "Validators/ChoiceValidator.h"
+#include "Validators/ValidationResult.h"
+
 #include <QString>
+#include <QVector>
 #include <QStringList>
 
 StoryManager::StoryManager()
@@ -35,6 +40,8 @@ StoryManager::StoryManager()
     m_Choices.append(choice1);
     m_Choices.append(choice2);
     m_Choices.append(choice3);
+
+    m_ChoiceValidator = new ChoiceValidator(this);
 }
 
 StoryManager::~StoryManager()
@@ -48,19 +55,21 @@ StoryManager::~StoryManager()
     {
         delete choice;
     }
+
+    delete m_ChoiceValidator;
 }
 
-QVector<Situation *> StoryManager::situations() const
+QList<Situation *> StoryManager::situations() const
 {
     return m_Situations;
 }
 
-QVector<Choice *> StoryManager::choices() const
+QList<Choice *> StoryManager::choices() const
 {
     return m_Choices;
 }
 
-Situation *StoryManager::findSituationById(QString id) const
+Situation *StoryManager::findSituationById(const QString &id) const
 {
     Situation *result = nullptr;
     for (Situation *sit : m_Situations)
@@ -73,6 +82,26 @@ Situation *StoryManager::findSituationById(QString id) const
     }
 
     return result;
+}
+
+Choice *StoryManager::findChoiceById(const QString &id) const
+{
+    Choice *result = nullptr;
+    for(Choice *choice : m_Choices)
+    {
+        if (choice->id() == id)
+        {
+            result = choice;
+            break;
+        }
+    }
+
+    return result;
+}
+
+ValidationResult StoryManager::ValidateChoice(Choice *choice) const
+{
+    return m_ChoiceValidator->Validate(choice);
 }
 
 QString StoryManager::findNextAvailableSituationId() const

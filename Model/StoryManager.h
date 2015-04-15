@@ -1,30 +1,35 @@
 #ifndef STORYMANAGER_H
 #define STORYMANAGER_H
 
-#include <QVector>
 #include <QObject>
 
 class Choice;
 class Situation;
-
+class ChoiceValidator;
+class ValidationResult;
 
 class StoryManager : public QObject
 {
     Q_OBJECT
 
-    QVector<Situation *> m_Situations;
-    QVector<Choice *> m_Choices;
+    QList<Situation *> m_Situations;
+    QList<Choice *> m_Choices;
 
     int m_NextAvailableSituationNumber;
+
+    ChoiceValidator *m_ChoiceValidator;
 
 public:
     StoryManager();
     ~StoryManager();
 
-    QVector<Situation *> situations() const;
-    QVector<Choice *> choices() const;
+    QList<Situation *> situations() const;
+    QList<Choice *> choices() const;
 
-    Situation *findSituationById(QString id) const;
+    Situation *findSituationById(const QString &id) const;
+    Choice *findChoiceById(const QString& id) const;
+
+    ValidationResult ValidateChoice(Choice *choice) const;
 
 private:
     QString findNextAvailableSituationId() const;
