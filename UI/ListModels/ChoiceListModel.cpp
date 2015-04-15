@@ -42,3 +42,10 @@ QModelIndex ChoiceListModel::getIndex(Choice *choice) const
 
     return createIndex(row, 0, choice);
 }
+
+void ChoiceListModel::addItem(Choice *item)
+{
+    beginInsertRows(QModelIndex(), m_Items.count(), m_Items.count());
+    m_Items.append(item);
+    endInsertRows();
+}

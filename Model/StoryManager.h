@@ -24,6 +24,8 @@ public:
     QVector<Situation *> situations() const;
     QVector<Choice *> choices() const;
 
+    Situation *findSituationById(QString id) const;
+
 private:
     QString findNextAvailableSituationId() const;
 

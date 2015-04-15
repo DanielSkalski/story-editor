@@ -26,6 +26,9 @@ StoryGraphWidget::StoryGraphWidget(StoryManager *storyManager, QWidget *parent)
 
     connect(m_StoryManager, SIGNAL(addedSituation(Situation*)),
             this, SLOT(addSituation(Situation*)));
+
+    connect(m_StoryManager, SIGNAL(addedChoice(Choice*)),
+            this, SLOT(addChoice(Choice*)));
 }
 
 void StoryGraphWidget::createNodesAndEdges()
@@ -199,5 +202,6 @@ void StoryGraphWidget::choiceEdgeClicked(ChoiceEdge *choiceEdge)
 
 void StoryGraphWidget::addEmptySituationAt(const QPointF &pos)
 {
+    Q_UNUSED(pos)
     m_StoryManager->createEmptySituation();
 }

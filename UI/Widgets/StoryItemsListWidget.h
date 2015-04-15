@@ -2,14 +2,15 @@
 #define STORYITEMSLISTWIDGET_H
 
 #include <QWidget>
-#include <QListView>
-#include <QPushButton>
 
 class StoryManager;
 class SituationListModel;
 class ChoiceListModel;
 class Situation;
 class Choice;
+
+class QPushButton;
+class QListView;
 
 class StoryItemsListWidget : public QWidget
 {
@@ -20,6 +21,7 @@ class StoryItemsListWidget : public QWidget
     QListView *m_ChoicesListView;
     QListView *m_SituationsListView;
     QPushButton *m_CreateSituationButton;
+    QPushButton *m_CreateChoiceButton;
 
     SituationListModel *m_SituationListModel;
     ChoiceListModel *m_ChoiceListModel;
@@ -37,12 +39,14 @@ public slots:
     void markChoiceAsSelected(Choice *choice);
 
     void addSituation(Situation *situation);
+    void addChoice(Choice *choice);
 
 private slots:
     void situationClicked(const QModelIndex &modelIndex);
     void choiceClicked(const QModelIndex &modelIndex);
 
     void createSituationButtonClicked();
+    void createChoiceButtonClicked();
 };
 
 #endif // STORYITEMSLISTWIDGET_H

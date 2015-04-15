@@ -5,12 +5,12 @@
 #include "UI/Widgets/StoryGraphWidget.h"
 
 #include <QPainter>
-#include <math.h>
+#include <cmath>
 #include <QMenu>
 #include <QGraphicsSceneContextMenuEvent>
 
-static const double Pi = 3.14159265358979323846264338327950288419717;
-static double TwoPi = 2.0 * Pi;
+static constexpr double Pi = 3.14159265358979323846264338327950288419717;
+static constexpr double TwoPi = 2.0 * Pi;
 
 ChoiceEdge::ChoiceEdge(Choice *choice, SituationNode *sourceNode, SituationNode* destNode, QGraphicsItem *parent)
     : StoryGraphItemBase(parent), Selectable(), m_Choice(choice), m_SourceNode(sourceNode), m_DestNode(destNode),
@@ -54,7 +54,7 @@ Choice *ChoiceEdge::choice() const
 
 void ChoiceEdge::determineEdgeEndPointsOffsets(QPointF& sourceOffset, QPointF& destOffset, const QLineF& line)
 {
-    if (abs(line.dy()) > abs(line.dx()))
+    if (std::abs(line.dy()) > std::abs(line.dx()))
     {
         if (line.dy() > 0)
         {
@@ -153,16 +153,16 @@ QPolygonF ChoiceEdge::createArrow(const QLineF& line) const
 {
     qreal arrowSize = 10;
 
-    double angle = ::acos(line.dx() / line.length());
+    double angle = std::acos(line.dx() / line.length());
     if (line.dy() >= 0)
     {
         angle = TwoPi - angle;
     }
 
-    QPointF destArrowP1 = m_DestPoint + QPointF(sin(angle - Pi / 3) * arrowSize,
-                                              cos(angle - Pi / 3) * arrowSize);
-    QPointF destArrowP2 = m_DestPoint + QPointF(sin(angle - Pi + Pi / 3) * arrowSize,
-                                              cos(angle - Pi + Pi / 3) * arrowSize);
+    QPointF destArrowP1 = m_DestPoint + QPointF(std::sin(angle - Pi / 3) * arrowSize,
+                                              std::cos(angle - Pi / 3) * arrowSize);
+    QPointF destArrowP2 = m_DestPoint + QPointF(std::sin(angle - Pi + Pi / 3) * arrowSize,
+                                              std::cos(angle - Pi + Pi / 3) * arrowSize);
 
     return QPolygonF() << line.p2() << destArrowP1 << destArrowP2;
 }

@@ -60,6 +60,21 @@ QVector<Choice *> StoryManager::choices() const
     return m_Choices;
 }
 
+Situation *StoryManager::findSituationById(QString id) const
+{
+    Situation *result = nullptr;
+    for (Situation *sit : m_Situations)
+    {
+        if (sit->id() == id)
+        {
+            result = sit;
+            break;
+        }
+    }
+
+    return result;
+}
+
 QString StoryManager::findNextAvailableSituationId() const
 {
     QString result;

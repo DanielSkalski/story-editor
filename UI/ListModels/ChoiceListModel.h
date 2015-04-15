@@ -24,6 +24,8 @@ public:
 
     QModelIndex getIndex(Choice *choice) const;
 
+    void addItem(Choice *item);
+
 signals:
 
 public slots:
