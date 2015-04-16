@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_StoryManager = new StoryManager();
 
     m_StoryGraphWidget = new StoryGraphWidget(m_StoryManager, this);
-    m_ItemPropertiesWidget = new ItemPropertiesWidget(this);
+    m_ItemPropertiesWidget = new ItemPropertiesWidget(m_StoryManager, this);
     m_StoryItemsListWidget = new StoryItemsListWidget(m_StoryManager, this);
 
     QHBoxLayout *layout = new QHBoxLayout;

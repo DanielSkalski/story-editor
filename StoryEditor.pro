@@ -33,7 +33,9 @@ SOURCES += main.cpp\
     UI/Widgets/PropertiesWidgets/ContentModelPropertiesWidget.cpp \
     UI/Dialogs/CreateChoiceDialog.cpp \
     Model/Validators/ChoiceValidator.cpp \
-    Model/Validators/ValidationResult.cpp
+    Model/Validators/ValidationResult.cpp \
+    Model/Validators/IIdValidator.cpp \
+    Model/Validators/SituationValidator.cpp
 
 HEADERS  += UI/mainwindow.h \
     UI/Widgets/StoryGraphWidget.h \
@@ -54,4 +56,6 @@ HEADERS  += UI/mainwindow.h \
     UI/Widgets/PropertiesWidgets/ContentModelPropertiesWidget.h \
     UI/Dialogs/CreateChoiceDialog.h \
     Model/Validators/ChoiceValidator.h \
-    Model/Validators/ValidationResult.h
+    Model/Validators/ValidationResult.h \
+    Model/Validators/IIdValidator.h \
+    Model/Validators/SituationValidator.h

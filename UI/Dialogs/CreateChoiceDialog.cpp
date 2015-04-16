@@ -94,7 +94,7 @@ void CreateChoiceDialog::populateComboBoxes()
     m_ToComboBox->addItems(situationsTexts);
 }
 
-Situation *CreateChoiceDialog::getSelectedSituation(QComboBox *comboBox)
+Situation *CreateChoiceDialog::getSelectedSituation(QComboBox *comboBox) const
 {
     Situation *result = nullptr;
 
@@ -105,6 +105,33 @@ Situation *CreateChoiceDialog::getSelectedSituation(QComboBox *comboBox)
     }
 
     return result;
+}
+
+Choice *CreateChoiceDialog::createChoice() const
+{
+    QString id = m_IdEdit->text();
+    QString content = m_ContentEdit->toPlainText();
+    Situation *from = getSelectedSituation(m_FromComboBox);
+    Situation *to = getSelectedSituation(m_ToComboBox);
+
+    Choice *choice = new Choice(id, content);
+    choice->setFrom(from);
+    choice->setTo(to);
+
+    return choice;
+}
+
+void CreateChoiceDialog::showValidationErrors(const ValidationResult &validationResult)
+{
+    QString errors;
+    for (auto error : validationResult.allErrors())
+    {
+        errors.append(error + "\n");
+    }
+
+    m_Errors->setText(errors);
+
+    m_Errors->show();
 }
 
 void CreateChoiceDialog::idEditTextChanged()
@@ -119,14 +146,7 @@ void CreateChoiceDialog::contentEditTextChanged()
 
 void CreateChoiceDialog::createButtonClicked()
 {
-    QString id = m_IdEdit->text();
-    QString content = m_ContentEdit->toPlainText();
-    Situation *from = getSelectedSituation(m_FromComboBox);
-    Situation *to = getSelectedSituation(m_ToComboBox);
-
-    Choice *choice = new Choice(id, content);
-    choice->setFrom(from);
-    choice->setTo(to);
+    auto choice = createChoice();
 
     ValidationResult validationResult = m_StoryManager->ValidateChoice(choice);
 
@@ -137,15 +157,9 @@ void CreateChoiceDialog::createButtonClicked()
     }
     else
     {
-        QString errors;
-        for(auto error : validationResult.allErrors())
-        {
-            errors.append(error + "\n");
-        }
+        delete choice;
 
-        m_Errors->setText(errors);
-
-        m_Errors->show();
+        showValidationErrors(validationResult);
     }
 }
 

@@ -1,13 +1,16 @@
 #include "SituationPropertiesWidget.h"
 
 #include "Model/Situation.h"
+#include "Model/StoryManager.h"
+#include "Model/Validators/IIdValidator.h"
+#include "Model/Validators/SituationValidator.h"
 
 #include <QGridLayout>
 #include <QLineEdit>
 #include <QLabel>
 
-SituationPropertiesWidget::SituationPropertiesWidget(QWidget *parent)
-    : ContentModelPropertiesWidget(parent), m_CurrentItem(nullptr)
+SituationPropertiesWidget::SituationPropertiesWidget(StoryManager *storyManager, QWidget *parent)
+     : ContentModelPropertiesWidget(parent), m_CurrentItem(nullptr), m_StoryManager(storyManager)
 {
     m_TitleEdit = new QLineEdit(this);
 
@@ -36,15 +39,22 @@ void SituationPropertiesWidget::showPropertiesOf(Situation *situation)
     }
 }
 
+IIdValidator *SituationPropertiesWidget::createIdValidator()
+{
+    return m_StoryManager->getSituationValidator();
+}
+
 void SituationPropertiesWidget::setupLayout()
 {
     QLabel *titleLabel = new QLabel(tr("Title"), this);
 
+    int row = 0;
+
     QGridLayout *layout = new QGridLayout();
-    addIdEditToLayout(layout, 0);
-    layout->addWidget(titleLabel, 1, 0);
-    layout->addWidget(m_TitleEdit, 1, 1);
-    addContentEditToLayout(layout, 2);
+    addIdEditToLayout(layout, row);
+    layout->addWidget(titleLabel, ++row, 0);
+    layout->addWidget(m_TitleEdit, row, 1);
+    addContentEditToLayout(layout, ++row);
 
     setLayout(layout);
 }

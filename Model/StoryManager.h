@@ -6,6 +6,7 @@
 class Choice;
 class Situation;
 class ChoiceValidator;
+class SituationValidator;
 class ValidationResult;
 
 class StoryManager : public QObject
@@ -18,6 +19,7 @@ class StoryManager : public QObject
     int m_NextAvailableSituationNumber;
 
     ChoiceValidator *m_ChoiceValidator;
+    SituationValidator *m_SituationValidator;
 
 public:
     StoryManager();
@@ -30,6 +32,9 @@ public:
     Choice *findChoiceById(const QString& id) const;
 
     ValidationResult ValidateChoice(Choice *choice) const;
+
+    ChoiceValidator *getChoiceValidator() const;
+    SituationValidator *getSituationValidator() const;
 
 private:
     QString findNextAvailableSituationId() const;

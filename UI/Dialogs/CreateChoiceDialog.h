@@ -6,6 +6,7 @@
 class Choice;
 class Situation;
 class StoryManager;
+class ValidationResult;
 class QLineEdit;
 class QTextEdit;
 class QComboBox;
@@ -35,7 +36,10 @@ public:
 private:
     void setupLayout();
     void populateComboBoxes();
-    Situation *getSelectedSituation(QComboBox *comboBox);
+    Situation *getSelectedSituation(QComboBox *comboBox) const;
+
+    Choice *createChoice() const;
+    void showValidationErrors(const ValidationResult& validationResult);
 
 signals:
 

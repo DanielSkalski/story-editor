@@ -5,6 +5,8 @@
 
 class Choice;
 class Situation;
+class StoryManager;
+class ContentModelPropertiesWidget;
 class ChoicePropertiesWidget;
 class SituationPropertiesWidget;
 
@@ -12,12 +14,19 @@ class ItemPropertiesWidget : public QWidget
 {
     Q_OBJECT
 
+    StoryManager *m_StoryManager;
+
     ChoicePropertiesWidget *m_ChoiceProperties;
     SituationPropertiesWidget *m_SituationProperties;
 
+    ContentModelPropertiesWidget *m_Current;
+
 public:
-    explicit ItemPropertiesWidget(QWidget *parent = 0);
+    explicit ItemPropertiesWidget(StoryManager *storyManager, QWidget *parent = 0);
     ~ItemPropertiesWidget();
+
+private:
+    void switchCurrentTo(ContentModelPropertiesWidget *);
 
 signals:
 

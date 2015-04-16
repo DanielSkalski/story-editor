@@ -3,12 +3,13 @@
 
 #include <QString>
 #include <QObject>
+#include "IIdValidator.h"
 
 class StoryManager;
 class Choice;
 class ValidationResult;
 
-class ChoiceValidator : public QObject
+class ChoiceValidator : public QObject, public IIdValidator
 {
     Q_OBJECT
 
@@ -22,10 +23,8 @@ public:
     explicit ChoiceValidator(StoryManager *storyManager, QObject *parent = 0);
     ~ChoiceValidator();
 
-    ValidationResult Validate(Choice *choice) const;
-
-private:
-    QList<QString> ValidateId(Choice *choice, const QString &newId) const;
+    ValidationResult validate(Choice *choice) const;
+    QString validateId(ContentModelBase *model, const QString &id) const;
 
 };
 

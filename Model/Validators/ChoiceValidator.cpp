@@ -18,7 +18,7 @@ ChoiceValidator::~ChoiceValidator()
 {
 }
 
-ValidationResult ChoiceValidator::Validate(Choice *choice) const
+ValidationResult ChoiceValidator::validate(Choice *choice) const
 {
     ValidationResult result;
 
@@ -36,22 +36,23 @@ ValidationResult ChoiceValidator::Validate(Choice *choice) const
         result.addError(ToFieldName, tr("Situation 'to' must be different than 'from'"));
     }
 
-    auto idErrors = ValidateId(choice, choice->id());
-    if (idErrors.size() > 0)
+    auto idError = validateId(choice, choice->id());
+    if (idError != "")
     {
-        result.addErrors(IdFieldName, idErrors);
+        result.addError(IdFieldName, idError);
     }
 
     return result;
 }
 
-QList<QString> ChoiceValidator::ValidateId(Choice *choice, const QString &id) const
+QString ChoiceValidator::validateId(ContentModelBase *model, const QString &id) const
 {
-    QList<QString> errors;
+    QString error = "";
+    Choice *choice = static_cast<Choice *>(model);
 
     if (id == "")
     {
-        errors.append(tr("Id is required"));
+        error = tr("Id is required");
     }
     else
     {
@@ -59,9 +60,9 @@ QList<QString> ChoiceValidator::ValidateId(Choice *choice, const QString &id) co
 
         if (choiceWithSameId != nullptr && choiceWithSameId != choice)
         {
-            errors.append(tr("Id is already used"));
+            error = tr("Id is already used");
         }
     }
 
-    return errors;
+    return error;
 }
