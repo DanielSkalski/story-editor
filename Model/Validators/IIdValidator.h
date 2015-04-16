@@ -7,8 +7,7 @@
 class IIdValidator
 {
 public:
-    IIdValidator();
-    ~IIdValidator();
+    virtual ~IIdValidator() {}
 
     virtual QString validateId(ContentModelBase *, const QString &id) const = 0;
 };

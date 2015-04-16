@@ -21,10 +21,9 @@ public:
     static const QString IdFieldName;
 
     explicit ChoiceValidator(StoryManager *storyManager, QObject *parent = 0);
-    ~ChoiceValidator();
 
     ValidationResult validate(Choice *choice) const;
-    QString validateId(ContentModelBase *model, const QString &id) const;
+    QString validateId(ContentModelBase *model, const QString &id) const override;
 
 };
 

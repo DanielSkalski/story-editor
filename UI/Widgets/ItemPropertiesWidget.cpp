@@ -4,13 +4,17 @@
 #include "Model/Choice.h"
 #include "PropertiesWidgets/ChoicePropertiesWidget.h"
 #include "PropertiesWidgets/SituationPropertiesWidget.h"
+#include "Model/Validators/IValidatorsProvider.h"
+#include "Model/StoryManager.h"
 
 
 ItemPropertiesWidget::ItemPropertiesWidget(StoryManager *storyManager, QWidget *parent)
     : QWidget(parent), m_StoryManager(storyManager), m_Current(nullptr)
 {
-    m_SituationProperties = new SituationPropertiesWidget(m_StoryManager, this);
-    m_ChoiceProperties = new ChoicePropertiesWidget(m_StoryManager, this);
+    IValidatorsProvider *validatorsProvider = dynamic_cast<IValidatorsProvider *>(m_StoryManager);
+
+    m_SituationProperties = new SituationPropertiesWidget(validatorsProvider, this);
+    m_ChoiceProperties = new ChoicePropertiesWidget(validatorsProvider, this);
 
     m_SituationProperties->hide();
     m_ChoiceProperties->hide();

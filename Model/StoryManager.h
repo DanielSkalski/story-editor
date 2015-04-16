@@ -2,6 +2,7 @@
 #define STORYMANAGER_H
 
 #include <QObject>
+#include "Model/Validators/IValidatorsProvider.h"
 
 class Choice;
 class Situation;
@@ -9,7 +10,7 @@ class ChoiceValidator;
 class SituationValidator;
 class ValidationResult;
 
-class StoryManager : public QObject
+class StoryManager : public QObject, public IValidatorsProvider
 {
     Q_OBJECT
 
@@ -23,7 +24,7 @@ class StoryManager : public QObject
 
 public:
     StoryManager();
-    ~StoryManager();
+    virtual ~StoryManager();
 
     QList<Situation *> situations() const;
     QList<Choice *> choices() const;
@@ -33,8 +34,8 @@ public:
 
     ValidationResult ValidateChoice(Choice *choice) const;
 
-    ChoiceValidator *getChoiceValidator() const;
-    SituationValidator *getSituationValidator() const;
+    ChoiceValidator *getChoiceValidator() const override;
+    SituationValidator *getSituationValidator() const override;
 
 private:
     QString findNextAvailableSituationId() const;

@@ -1,16 +1,14 @@
 #include "SituationPropertiesWidget.h"
 
 #include "Model/Situation.h"
-#include "Model/StoryManager.h"
-#include "Model/Validators/IIdValidator.h"
-#include "Model/Validators/SituationValidator.h"
+#include "Model/Validators/IValidatorsProvider.h"
 
 #include <QGridLayout>
 #include <QLineEdit>
 #include <QLabel>
 
-SituationPropertiesWidget::SituationPropertiesWidget(StoryManager *storyManager, QWidget *parent)
-     : ContentModelPropertiesWidget(parent), m_CurrentItem(nullptr), m_StoryManager(storyManager)
+SituationPropertiesWidget::SituationPropertiesWidget(IValidatorsProvider *validatorsProvider, QWidget *parent)
+     : ContentModelPropertiesWidget(parent), m_CurrentItem(nullptr), m_ValidatorsProvider(validatorsProvider)
 {
     m_TitleEdit = new QLineEdit(this);
 
@@ -41,7 +39,7 @@ void SituationPropertiesWidget::showPropertiesOf(Situation *situation)
 
 IIdValidator *SituationPropertiesWidget::createIdValidator()
 {
-    return m_StoryManager->getSituationValidator();
+    return m_ValidatorsProvider->getSituationValidator();
 }
 
 void SituationPropertiesWidget::setupLayout()

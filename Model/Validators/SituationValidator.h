@@ -15,7 +15,7 @@ class SituationValidator : public QObject, public IIdValidator
 public:
     explicit SituationValidator(StoryManager *storyManager, QObject *parent = 0);
 
-    QString validateId(ContentModelBase *model, const QString &id) const;
+    QString validateId(ContentModelBase *model, const QString &id) const override;
 };
 
 #endif // SITUATIONVALIDATOR_H

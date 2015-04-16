@@ -5,16 +5,17 @@
 
 class Choice;
 class StoryManager;
+class IValidatorsProvider;
 
 class ChoicePropertiesWidget : public ContentModelPropertiesWidget
 {
     Q_OBJECT
 
     Choice *m_CurrentItem;
-    StoryManager *m_StoryManager;
+    IValidatorsProvider *m_ValidatorsProvider;
 
 public:
-    explicit ChoicePropertiesWidget(StoryManager *storyManager,QWidget *parent = 0);
+    explicit ChoicePropertiesWidget(IValidatorsProvider *validatorsProvider, QWidget *parent = 0);
     ~ChoicePropertiesWidget();
 
     void showPropertiesOf(Choice *choice);

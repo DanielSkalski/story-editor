@@ -5,7 +5,7 @@
 
 class QLineEdit;
 class Situation;
-class StoryManager;
+class IValidatorsProvider;
 
 class SituationPropertiesWidget : public ContentModelPropertiesWidget
 {
@@ -14,10 +14,11 @@ class SituationPropertiesWidget : public ContentModelPropertiesWidget
     QLineEdit *m_TitleEdit;
 
     Situation *m_CurrentItem;
-    StoryManager *m_StoryManager;
+
+    IValidatorsProvider *m_ValidatorsProvider;
 
 public:
-    explicit SituationPropertiesWidget(StoryManager *storyManager, QWidget *parent = 0);
+    explicit SituationPropertiesWidget(IValidatorsProvider *validatorsProvider, QWidget *parent = 0);
     ~SituationPropertiesWidget();
 
     void showPropertiesOf(Situation *situation);

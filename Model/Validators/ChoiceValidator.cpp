@@ -14,10 +14,6 @@ ChoiceValidator::ChoiceValidator(StoryManager *storyManager, QObject *parent)
 {
 }
 
-ChoiceValidator::~ChoiceValidator()
-{
-}
-
 ValidationResult ChoiceValidator::validate(Choice *choice) const
 {
     ValidationResult result;

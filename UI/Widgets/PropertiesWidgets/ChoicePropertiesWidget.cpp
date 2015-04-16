@@ -1,14 +1,12 @@
 #include "ChoicePropertiesWidget.h"
 
 #include "Model/Choice.h"
-#include "Model/StoryManager.h"
-#include "Model/Validators/IIdValidator.h"
-#include "Model/Validators/ChoiceValidator.h"
+#include "Model/Validators/IValidatorsProvider.h"
 
 #include <QGridLayout>
 
-ChoicePropertiesWidget::ChoicePropertiesWidget(StoryManager *storyManager, QWidget *parent)
-    : ContentModelPropertiesWidget(parent), m_CurrentItem(nullptr), m_StoryManager(storyManager)
+ChoicePropertiesWidget::ChoicePropertiesWidget(IValidatorsProvider *validatorsProvider, QWidget *parent)
+    : ContentModelPropertiesWidget(parent), m_CurrentItem(nullptr), m_ValidatorsProvider(validatorsProvider)
 {
     setupLayout();
 }
@@ -32,7 +30,7 @@ void ChoicePropertiesWidget::showPropertiesOf(Choice *choice)
 
 IIdValidator *ChoicePropertiesWidget::createIdValidator()
 {
-    return m_StoryManager->getChoiceValidator();
+    return m_ValidatorsProvider->getChoiceValidator();
 }
 
 void ChoicePropertiesWidget::setupLayout()
