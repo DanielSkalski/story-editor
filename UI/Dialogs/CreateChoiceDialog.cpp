@@ -17,7 +17,17 @@
 CreateChoiceDialog::CreateChoiceDialog(StoryManager *storyManager, QWidget *parent)
     : QDialog(parent), m_StoryManager(storyManager)
 {
-    m_Errors = new QLabel(this);
+    m_ChoiceValidator = m_StoryManager->getChoiceValidator();
+
+    m_ErrorPalette.setColor(QPalette::Text, Qt::red);
+    m_ErrorPalette.setColor(QPalette::WindowText, Qt::red);
+
+    m_IdErrors = new QLabel(this);
+    m_IdErrors->setPalette(m_ErrorPalette);
+    m_IdErrors->hide();
+    m_SituationsErrors = new QLabel(this);
+    m_SituationsErrors->setPalette(m_ErrorPalette);
+    m_SituationsErrors->hide();
 
     m_FromComboBox = new QComboBox(this);
     m_ToComboBox = new QComboBox(this);
@@ -33,14 +43,14 @@ CreateChoiceDialog::CreateChoiceDialog(StoryManager *storyManager, QWidget *pare
     populateComboBoxes();
 
     connect(m_IdEdit, SIGNAL(textChanged(QString)), this, SLOT(idEditTextChanged()));
-    connect(m_ContentEdit, SIGNAL(textChanged()), this, SLOT(contentEditTextChanged()));
+    connect(m_FromComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(fromComboBoxSelectionChanged()));
+    connect(m_ToComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(toComboBoxSelectionChanged()));
     connect(m_CreateButton, SIGNAL(clicked()), this, SLOT(createButtonClicked()));
     connect(m_CancelButton, SIGNAL(clicked()), this, SLOT(cancelButtonClicked()));
 }
 
 CreateChoiceDialog::~CreateChoiceDialog()
 {
-
 }
 
 void CreateChoiceDialog::setupLayout()
@@ -49,11 +59,6 @@ void CreateChoiceDialog::setupLayout()
     QLabel *contentLabel = new QLabel(tr("Content"), this);
     QLabel *fromLabel = new QLabel(tr("From"), this);
     QLabel *toLabel = new QLabel(tr("To"), this);
-
-    QPalette palette;
-    palette.setColor(QPalette::WindowText, Qt::red);
-    m_Errors->setPalette(palette);
-    m_Errors->hide();
 
     QVBoxLayout *layout = new QVBoxLayout();
 
@@ -66,12 +71,13 @@ void CreateChoiceDialog::setupLayout()
     formLayout->addWidget(m_FromComboBox, 0, 1);
     formLayout->addWidget(toLabel, 1, 0);
     formLayout->addWidget(m_ToComboBox, 1, 1);
-    formLayout->addWidget(idLabel, 2, 0);
-    formLayout->addWidget(m_IdEdit, 2, 1);
-    formLayout->addWidget(contentLabel, 3, 0, 1, 1, Qt::AlignTop);
-    formLayout->addWidget(m_ContentEdit, 3, 1);
+    formLayout->addWidget(m_IdErrors, 2, 0, 1, 2);
+    formLayout->addWidget(idLabel, 3, 0);
+    formLayout->addWidget(m_IdEdit, 3, 1);
+    formLayout->addWidget(contentLabel, 4, 0, 1, 1, Qt::AlignTop);
+    formLayout->addWidget(m_ContentEdit, 4, 1);
 
-    layout->addWidget(m_Errors);
+    layout->addWidget(m_SituationsErrors);
     layout->addLayout(formLayout);
     layout->addLayout(buttonsLayout);
 
@@ -121,45 +127,112 @@ Choice *CreateChoiceDialog::createChoice() const
     return choice;
 }
 
-void CreateChoiceDialog::showValidationErrors(const ValidationResult &validationResult)
+bool CreateChoiceDialog::validateForm()
 {
-    QString errors;
-    for (auto error : validationResult.allErrors())
+    bool isIdValid = validateId();
+    bool isSituationsValid = validateSituations();
+
+    return isIdValid && isSituationsValid;
+}
+
+bool CreateChoiceDialog::validateId()
+{
+    QString id = m_IdEdit->text();
+
+    auto error = m_ChoiceValidator->validateId(nullptr, id);
+    bool isValid = (error == "");
+
+    if (isValid)
     {
-        errors.append(error + "\n");
+        hideIdValidationErrors();
+    }
+    else
+    {
+        showIdValidationErrors(error);
     }
 
-    m_Errors->setText(errors);
+    return isValid;
+}
 
-    m_Errors->show();
+bool CreateChoiceDialog::validateSituations()
+{
+    Situation *from = getSelectedSituation(m_FromComboBox);
+    Situation *to = getSelectedSituation(m_ToComboBox);
+
+    auto errors = m_ChoiceValidator->validateSelectedSituations(from, to);
+    bool isValid = (errors.size() == 0);
+
+    if (isValid)
+    {
+        hideSituationsValidationErrors();
+    }
+    else
+    {
+        showSituationsValidationErrors(errors);
+    }
+
+    return isValid;
+}
+
+void CreateChoiceDialog::showSituationsValidationErrors(QList<QString> errors)
+{
+    QString joinedErrors;
+    for (auto error : errors)
+    {
+        joinedErrors.append(error + "\n");
+    }
+
+    joinedErrors = joinedErrors.trimmed();
+
+    m_SituationsErrors->setText(joinedErrors);
+
+    m_SituationsErrors->show();
+}
+
+void CreateChoiceDialog::hideSituationsValidationErrors()
+{
+    m_SituationsErrors->hide();
+}
+
+void CreateChoiceDialog::showIdValidationErrors(QString error)
+{
+    m_IdErrors->setText(error);
+    m_IdErrors->show();
+
+    m_IdEdit->setPalette(m_ErrorPalette);
+}
+
+void CreateChoiceDialog::hideIdValidationErrors()
+{
+    m_IdErrors->hide();
+    m_IdEdit->setPalette(m_NormalPalette);
 }
 
 void CreateChoiceDialog::idEditTextChanged()
 {
-
+    validateId();
 }
 
-void CreateChoiceDialog::contentEditTextChanged()
+void CreateChoiceDialog::fromComboBoxSelectionChanged()
 {
+    validateSituations();
+}
 
+void CreateChoiceDialog::toComboBoxSelectionChanged()
+{
+    validateSituations();
 }
 
 void CreateChoiceDialog::createButtonClicked()
 {
-    auto choice = createChoice();
+    bool isFormValid = validateForm();
 
-    ValidationResult validationResult = m_StoryManager->ValidateChoice(choice);
-
-    if (validationResult.isCorrect())
+    if (isFormValid)
     {
+        auto choice = createChoice();
         m_StoryManager->addChoice(choice);
-        this->close();
-    }
-    else
-    {
-        delete choice;
 
-        showValidationErrors(validationResult);
+        this->close();
     }
 }
 

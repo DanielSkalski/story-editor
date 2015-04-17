@@ -24,7 +24,7 @@ public:
     void showPropertiesOf(Situation *situation);
 
 protected:
-    IIdValidator *createIdValidator();
+    IIdValidator *createIdValidator() Q_DECL_OVERRIDE;
 
 private:
     void setupLayout();

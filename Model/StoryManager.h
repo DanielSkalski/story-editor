@@ -32,10 +32,8 @@ public:
     Situation *findSituationById(const QString &id) const;
     Choice *findChoiceById(const QString& id) const;
 
-    ValidationResult ValidateChoice(Choice *choice) const;
-
-    ChoiceValidator *getChoiceValidator() const override;
-    SituationValidator *getSituationValidator() const override;
+    ChoiceValidator *getChoiceValidator() const Q_DECL_OVERRIDE;
+    SituationValidator *getSituationValidator() const Q_DECL_OVERRIDE;
 
 private:
     QString findNextAvailableSituationId() const;

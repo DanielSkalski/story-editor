@@ -14,10 +14,10 @@ public:
     explicit ContentModelBase(QObject *parent = 0);
     ContentModelBase(const QString &id, const QString &content, QObject *parent = 0);
 
+    virtual ~ContentModelBase();
+
     QString id() const;
     QString content() const;
-
-    virtual ~ContentModelBase();
 
 signals:
     void idHasChanged(const QString& newId);

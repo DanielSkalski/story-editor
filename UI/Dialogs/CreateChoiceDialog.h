@@ -7,6 +7,8 @@ class Choice;
 class Situation;
 class StoryManager;
 class ValidationResult;
+class ChoiceValidator;
+
 class QLineEdit;
 class QTextEdit;
 class QComboBox;
@@ -17,8 +19,13 @@ class CreateChoiceDialog : public QDialog
     Q_OBJECT
 
     StoryManager *m_StoryManager;
+    ChoiceValidator *m_ChoiceValidator;
 
-    QLabel *m_Errors;
+    QPalette m_ErrorPalette;
+    QPalette m_NormalPalette;
+
+    QLabel *m_IdErrors;
+    QLabel *m_SituationsErrors;
 
     QComboBox *m_FromComboBox;
     QComboBox *m_ToComboBox;
@@ -36,16 +43,24 @@ public:
 private:
     void setupLayout();
     void populateComboBoxes();
+
     Situation *getSelectedSituation(QComboBox *comboBox) const;
-
     Choice *createChoice() const;
-    void showValidationErrors(const ValidationResult& validationResult);
 
-signals:
+    bool validateForm();
+    bool validateId();
+    bool validateSituations();
+
+    void showSituationsValidationErrors(QList<QString> errors);
+    void hideSituationsValidationErrors();
+
+    void showIdValidationErrors(QString error);
+    void hideIdValidationErrors();
 
 private slots:
     void idEditTextChanged();
-    void contentEditTextChanged();
+    void fromComboBoxSelectionChanged();
+    void toComboBoxSelectionChanged();
 
     void createButtonClicked();
     void cancelButtonClicked();

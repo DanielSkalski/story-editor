@@ -7,6 +7,7 @@
 
 class StoryManager;
 class Choice;
+class Situation;
 class ValidationResult;
 
 class ChoiceValidator : public QObject, public IIdValidator
@@ -16,14 +17,10 @@ class ChoiceValidator : public QObject, public IIdValidator
     StoryManager *m_StoryManager;
 
 public:
-    static const QString FromFieldName;
-    static const QString ToFieldName;
-    static const QString IdFieldName;
-
     explicit ChoiceValidator(StoryManager *storyManager, QObject *parent = 0);
 
-    ValidationResult validate(Choice *choice) const;
-    QString validateId(ContentModelBase *model, const QString &id) const override;
+    QList<QString> validateSelectedSituations(Situation *from, Situation *to) const;
+    QString validateId(ContentModelBase *model, const QString &id) const Q_DECL_OVERRIDE;
 
 };
 

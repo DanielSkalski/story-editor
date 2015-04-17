@@ -5,37 +5,27 @@
 #include "ValidationResult.h"
 
 
-const QString ChoiceValidator::FromFieldName = "from";
-const QString ChoiceValidator::ToFieldName = "to";
-const QString ChoiceValidator::IdFieldName = "id";
-
 ChoiceValidator::ChoiceValidator(StoryManager *storyManager, QObject *parent)
     : QObject(parent), m_StoryManager(storyManager)
 {
 }
 
-ValidationResult ChoiceValidator::validate(Choice *choice) const
+QList<QString> ChoiceValidator::validateSelectedSituations(Situation *from, Situation *to) const
 {
-    ValidationResult result;
+    QList<QString> result;
 
-    if (choice->from() == nullptr)
+    if (from == nullptr)
     {
-        result.addError(FromFieldName, tr("Situation 'from' must be selected"));
+        result.append(tr("Situation 'from' must be selected"));
     }
 
-    if (choice->to() == nullptr)
+    if (to == nullptr)
     {
-        result.addError(ToFieldName, tr("Situation 'to' must be selected"));
+        result.append(tr("Situation 'to' must be selected"));
     }
-    else if (choice->to() == choice->from())
+    else if (to == from)
     {
-        result.addError(ToFieldName, tr("Situation 'to' must be different than 'from'"));
-    }
-
-    auto idError = validateId(choice, choice->id());
-    if (idError != "")
-    {
-        result.addError(IdFieldName, idError);
+        result.append(tr("Situation 'to' must be different than 'from'"));
     }
 
     return result;

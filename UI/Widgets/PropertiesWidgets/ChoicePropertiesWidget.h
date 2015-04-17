@@ -20,7 +20,7 @@ public:
 
     void showPropertiesOf(Choice *choice);
 
-    IIdValidator *createIdValidator();
+    IIdValidator *createIdValidator() Q_DECL_OVERRIDE;
 
 private:
     void setupLayout();

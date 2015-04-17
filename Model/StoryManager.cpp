@@ -102,11 +102,6 @@ Choice *StoryManager::findChoiceById(const QString &id) const
     return result;
 }
 
-ValidationResult StoryManager::ValidateChoice(Choice *choice) const
-{
-    return m_ChoiceValidator->validate(choice);
-}
-
 ChoiceValidator *StoryManager::getChoiceValidator() const
 {
     return m_ChoiceValidator;
