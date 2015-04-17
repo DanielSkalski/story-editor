@@ -1,16 +1,12 @@
 #ifndef CHOICEVALIDATOR_H
 #define CHOICEVALIDATOR_H
 
-#include <QString>
-#include <QObject>
-#include "IIdValidator.h"
+#include "IdValidatorBase.h"
 
 class StoryManager;
-class Choice;
 class Situation;
-class ValidationResult;
 
-class ChoiceValidator : public QObject, public IIdValidator
+class ChoiceValidator : public IdValidatorBase
 {
     Q_OBJECT
 
@@ -20,8 +16,9 @@ public:
     explicit ChoiceValidator(StoryManager *storyManager, QObject *parent = 0);
 
     QList<QString> validateSelectedSituations(Situation *from, Situation *to) const;
-    QString validateId(ContentModelBase *model, const QString &id) const Q_DECL_OVERRIDE;
 
+protected:
+    ContentModelBase *findItemWithId(const QString& id) const Q_DECL_OVERRIDE;
 };
 
 #endif // CHOICEVALIDATOR_H

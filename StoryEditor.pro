@@ -34,7 +34,8 @@ SOURCES += main.cpp\
     UI/Dialogs/CreateChoiceDialog.cpp \
     Model/Validators/ChoiceValidator.cpp \
     Model/Validators/ValidationResult.cpp \
-    Model/Validators/SituationValidator.cpp
+    Model/Validators/SituationValidator.cpp \
+    Model/Validators/IdValidatorBase.cpp
 
 HEADERS  += UI/mainwindow.h \
     UI/Widgets/StoryGraphWidget.h \
@@ -58,4 +59,5 @@ HEADERS  += UI/mainwindow.h \
     Model/Validators/ValidationResult.h \
     Model/Validators/IIdValidator.h \
     Model/Validators/SituationValidator.h \
-    Model/Validators/IValidatorsProvider.h
+    Model/Validators/IValidatorsProvider.h \
+    Model/Validators/IdValidatorBase.h

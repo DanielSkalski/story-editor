@@ -6,7 +6,7 @@
 
 
 ChoiceValidator::ChoiceValidator(StoryManager *storyManager, QObject *parent)
-    : QObject(parent), m_StoryManager(storyManager)
+    : IdValidatorBase(parent), m_StoryManager(storyManager)
 {
 }
 
@@ -31,24 +31,7 @@ QList<QString> ChoiceValidator::validateSelectedSituations(Situation *from, Situ
     return result;
 }
 
-QString ChoiceValidator::validateId(ContentModelBase *model, const QString &id) const
+ContentModelBase *ChoiceValidator::findItemWithId(const QString &id) const
 {
-    QString error = "";
-    Choice *choice = static_cast<Choice *>(model);
-
-    if (id == "")
-    {
-        error = tr("Id is required");
-    }
-    else
-    {
-        auto choiceWithSameId = m_StoryManager->findChoiceById(id);
-
-        if (choiceWithSameId != nullptr && choiceWithSameId != choice)
-        {
-            error = tr("Id is already used");
-        }
-    }
-
-    return error;
+    return m_StoryManager->findChoiceById(id);
 }

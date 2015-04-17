@@ -1,12 +1,11 @@
 #ifndef SITUATIONVALIDATOR_H
 #define SITUATIONVALIDATOR_H
 
-#include <QObject>
-#include "IIdValidator.h"
+#include "IdValidatorBase.h"
 
 class StoryManager;
 
-class SituationValidator : public QObject, public IIdValidator
+class SituationValidator : public IdValidatorBase
 {
     Q_OBJECT
 
@@ -15,7 +14,8 @@ class SituationValidator : public QObject, public IIdValidator
 public:
     explicit SituationValidator(StoryManager *storyManager, QObject *parent = 0);
 
-    QString validateId(ContentModelBase *model, const QString &id) const Q_DECL_OVERRIDE;
+protected:
+    ContentModelBase *findItemWithId(const QString &id) const Q_DECL_OVERRIDE;
 };
 
 #endif // SITUATIONVALIDATOR_H
