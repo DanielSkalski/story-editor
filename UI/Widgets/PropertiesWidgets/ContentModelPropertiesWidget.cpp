@@ -36,6 +36,11 @@ void ContentModelPropertiesWidget::connectIdAndContentProperties(ContentModelBas
     m_ContentEdit->setText(entity->content());
 
     connect(this, SIGNAL(contentEditTextChanged(QString)), entity, SLOT(setContent(QString)));
+
+    // if previous item had edited id to the same value as current item id
+    // the event textChanged of m_IdEdit will not be triggered,
+    // so we must hide id validation errors manualy.
+    hideIdValidationError();
 }
 
 void ContentModelPropertiesWidget::disconnectIdAndContentProperties(ContentModelBase *entity)
