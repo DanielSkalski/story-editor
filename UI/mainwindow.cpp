@@ -1,6 +1,9 @@
 #include "mainwindow.h"
 
 #include <QHBoxLayout>
+#include <QDockWidget>
+#include <QMenu>
+#include <QtWidgets>
 
 #include "Widgets/StoryGraphWidget.h"
 #include "Widgets/ItemPropertiesWidget.h"
@@ -16,16 +19,15 @@ MainWindow::MainWindow(QWidget *parent)
     m_ItemPropertiesWidget = new ItemPropertiesWidget(m_StoryManager, this);
     m_StoryItemsListWidget = new StoryItemsListWidget(m_StoryManager, this);
 
-    QHBoxLayout *layout = new QHBoxLayout;
+    setCentralWidget(m_StoryGraphWidget);
 
-    layout->addWidget(m_StoryItemsListWidget);
-    layout->addWidget(m_StoryGraphWidget);
-    layout->addWidget(m_ItemPropertiesWidget);
+    createActions();
+    createMenus();
+    createDockWindows();
 
-    QWidget *layoutWidget = new QWidget();
-    layoutWidget->setLayout(layout);
+    setWindowTitle(tr("Story Editor"));
 
-    setCentralWidget(layoutWidget);
+    setUnifiedTitleAndToolBarOnMac(true);
 
     connect(m_StoryGraphWidget, SIGNAL(situationSelectionChanged(Situation*)),
             m_ItemPropertiesWidget, SLOT(showPropertiesOf(Situation*)));
@@ -49,4 +51,35 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete m_StoryManager;
+}
+
+void MainWindow::createActions()
+{
+
+}
+
+void MainWindow::createMenus()
+{
+    fileMenu = menuBar()->addMenu(tr("&File"));
+
+    storyItemsMenu = menuBar()->addMenu(tr("Story &Items"));
+
+    viewMenu = menuBar()->addMenu(tr("&View"));
+
+    menuBar()->addSeparator();
+
+    helpMenu = menuBar()->addMenu(tr("&Help"));
+}
+
+void MainWindow::createDockWindows()
+{
+    QDockWidget *dock = new QDockWidget(tr("Properties"), this);
+    dock->setWidget(m_ItemPropertiesWidget);
+    addDockWidget(Qt::RightDockWidgetArea, dock);
+    viewMenu->addAction(dock->toggleViewAction());
+
+    dock = new QDockWidget(tr("Story items"), this);
+    dock->setWidget(m_StoryItemsListWidget);
+    addDockWidget(Qt::LeftDockWidgetArea, dock);
+    viewMenu->addAction(dock->toggleViewAction());
 }

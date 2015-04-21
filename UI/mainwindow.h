@@ -18,9 +18,19 @@ class MainWindow : public QMainWindow
     ItemPropertiesWidget *m_ItemPropertiesWidget;
     StoryItemsListWidget *m_StoryItemsListWidget;
 
+    QMenu *fileMenu;
+    QMenu *storyItemsMenu;
+    QMenu *viewMenu;
+    QMenu *helpMenu;
+
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+private:
+    void createActions();
+    void createMenus();
+    void createDockWindows();
 };
 
 #endif // MAINWINDOW_H
