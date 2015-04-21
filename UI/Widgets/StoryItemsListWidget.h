@@ -37,6 +37,9 @@ signals:
     void situationClicked(Situation *situation);
     void choiceClicked(Choice *choice);
 
+    void createSituationButtonClicked();
+    void createChoiceButtonClicked();
+
 public slots:
     void markSituationAsSelected(Situation *situation);
     void markChoiceAsSelected(Choice *choice);
@@ -45,11 +48,11 @@ public slots:
     void addChoice(Choice *choice);
 
 private slots:
-    void situationClicked(const QModelIndex &modelIndex);
-    void choiceClicked(const QModelIndex &modelIndex);
+    void onSituationClicked(const QModelIndex &modelIndex);
+    void onChoiceClicked(const QModelIndex &modelIndex);
 
-    void createSituationButtonClicked();
-    void createChoiceButtonClicked();
+    void onCreateSituationButtonClicked();
+    void onCreateChoiceButtonClicked();
 };
 
 #endif // STORYITEMSLISTWIDGET_H

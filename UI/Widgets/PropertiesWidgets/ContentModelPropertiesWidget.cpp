@@ -20,7 +20,7 @@ ContentModelPropertiesWidget::ContentModelPropertiesWidget(QWidget *parent) : QW
     m_ErrorPalette.setColor(QPalette::Text, Qt::red);
 
     connect(m_IdEdit, SIGNAL(textChanged(QString)), this, SLOT(validateId()));
-    connect(m_ContentEdit, SIGNAL(textChanged()), this, SLOT(contentEditTextChanged()));
+    connect(m_ContentEdit, SIGNAL(textChanged()), this, SLOT(onContentEditTextChanged()));
 }
 
 ContentModelPropertiesWidget::~ContentModelPropertiesWidget()
@@ -91,7 +91,7 @@ void ContentModelPropertiesWidget::applyChanges()
     }
 }
 
-void ContentModelPropertiesWidget::contentEditTextChanged()
+void ContentModelPropertiesWidget::onContentEditTextChanged()
 {
     emit contentEditTextChanged(m_ContentEdit->toPlainText());
 }

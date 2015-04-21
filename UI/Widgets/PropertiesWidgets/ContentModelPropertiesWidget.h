@@ -49,7 +49,7 @@ public slots:
     void applyChanges();
 
 private slots:
-    void contentEditTextChanged();
+    void onContentEditTextChanged();
     bool validateId();
 };
 

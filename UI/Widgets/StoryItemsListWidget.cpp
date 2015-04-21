@@ -32,11 +32,11 @@ StoryItemsListWidget::StoryItemsListWidget(StoryManager *storyManager, QWidget *
 
     setupLayout();
 
-    connect(m_SituationsListView, SIGNAL(clicked(QModelIndex)), this, SLOT(situationClicked(QModelIndex)));
-    connect(m_ChoicesListView, SIGNAL(clicked(QModelIndex)), this, SLOT(choiceClicked(QModelIndex)));
+    connect(m_SituationsListView, SIGNAL(clicked(QModelIndex)), this, SLOT(onSituationClicked(QModelIndex)));
+    connect(m_ChoicesListView, SIGNAL(clicked(QModelIndex)), this, SLOT(onChoiceClicked(QModelIndex)));
 
-    connect(m_CreateSituationButton, SIGNAL(clicked()), this, SLOT(createSituationButtonClicked()));
-    connect(m_CreateChoiceButton, SIGNAL(clicked()), this, SLOT(createChoiceButtonClicked()));
+    connect(m_CreateSituationButton, SIGNAL(clicked()), this, SLOT(onCreateSituationButtonClicked()));
+    connect(m_CreateChoiceButton, SIGNAL(clicked()), this, SLOT(onCreateChoiceButtonClicked()));
 
     connect(m_StoryManager, SIGNAL(addedSituation(Situation*)), this, SLOT(addSituation(Situation*)));
     connect(m_StoryManager, SIGNAL(addedChoice(Choice*)), this, SLOT(addChoice(Choice *)));
@@ -97,7 +97,7 @@ void StoryItemsListWidget::addChoice(Choice *choice)
     m_ChoiceListModel->addItem(choice);
 }
 
-void StoryItemsListWidget::situationClicked(const QModelIndex &modelIndex)
+void StoryItemsListWidget::onSituationClicked(const QModelIndex &modelIndex)
 {
     auto situation = m_SituationListModel->getItem(modelIndex);
     markSituationAsSelected(situation);
@@ -105,19 +105,18 @@ void StoryItemsListWidget::situationClicked(const QModelIndex &modelIndex)
     emit situationClicked(situation);
 }
 
-void StoryItemsListWidget::choiceClicked(const QModelIndex &modelIndex)
+void StoryItemsListWidget::onChoiceClicked(const QModelIndex &modelIndex)
 {
     auto choice = m_ChoiceListModel->getItem(modelIndex);
     emit choiceClicked(choice);
 }
 
-void StoryItemsListWidget::createSituationButtonClicked()
+void StoryItemsListWidget::onCreateSituationButtonClicked()
 {
-    m_StoryManager->createEmptySituation();
+    emit createSituationButtonClicked();
 }
 
-void StoryItemsListWidget::createChoiceButtonClicked()
+void StoryItemsListWidget::onCreateChoiceButtonClicked()
 {
-    auto dialog = new CreateChoiceDialog(m_StoryManager, this->parentWidget());
-    dialog->exec();
+    emit createChoiceButtonClicked();
 }

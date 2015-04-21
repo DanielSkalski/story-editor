@@ -51,13 +51,11 @@ public slots:
     void addChoice(Choice *choice);
 
 private slots:
-    void situationIdHasChanged(const QString& oldId, const QString& newId);
-    void choiceIdHasChanged(const QString& oldId, const QString& newId);
+    void onSituationIdHasChanged(const QString& oldId, const QString& newId);
+    void onChoiceIdHasChanged(const QString& oldId, const QString& newId);
 
-    void situationNodeClicked(SituationNode *situationNode);
-    void choiceEdgeClicked(ChoiceEdge *choiceEdge);
-
-    void addEmptySituationAt(const QPointF& pos);
+    void onSituationNodeClicked(SituationNode *situationNode);
+    void onChoiceEdgeClicked(ChoiceEdge *choiceEdge);
 };
 
 #endif // STORYGRAPHWIDGET_H
