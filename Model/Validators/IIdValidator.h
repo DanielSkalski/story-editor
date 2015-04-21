@@ -3,13 +3,14 @@
 
 #include "Model/ContentModelBase.h"
 #include <QString>
+#include "ValidationResult.h"
 
 class IIdValidator
 {
 public:
     virtual ~IIdValidator() {}
 
-    virtual QString validateId(ContentModelBase *item, const QString &id) const = 0;
+    virtual ValidationResult validateId(ContentModelBase *item, const QString &id) const = 0;
 };
 
 #endif // IIDVALIDATOR_H

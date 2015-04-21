@@ -2,13 +2,11 @@
 #define VALIDATIONRESULT_H
 
 #include <QString>
-#include <QMap>
 #include <QList>
 
 class ValidationResult
 {
-    QMap<QString, QList<QString> > m_Errors;
-    QList<QString> m_AllErrors;
+    QList<QString> m_Errors;
 
 public:
     ValidationResult();
@@ -16,12 +14,9 @@ public:
 
     bool isCorrect() const;
 
-    void addError(const QString& fieldName, const QString& errorMessage);
-    void addErrors(const QString& fieldName, const QList<QString>& errors);
+    void addError(const QString& errorMessage);
 
-    QList<QString> fieldsWithErrors() const;
-    QList<QString> errorsForField(const QString &fieldName) const;
-    QList<QString> allErrors() const;
+    QList<QString> errors() const;
 };
 
 #endif // VALIDATIONRESULT_H

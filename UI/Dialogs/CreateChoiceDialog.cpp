@@ -139,19 +139,18 @@ bool CreateChoiceDialog::validateId()
 {
     QString id = m_IdEdit->text();
 
-    auto error = m_ChoiceValidator->validateId(nullptr, id);
-    bool isValid = (error == "");
+    auto result = m_ChoiceValidator->validateId(nullptr, id);
 
-    if (isValid)
+    if (result.isCorrect())
     {
         hideIdValidationErrors();
     }
     else
     {
-        showIdValidationErrors(error);
+        showIdValidationErrors(result.errors().first());
     }
 
-    return isValid;
+    return result.isCorrect();
 }
 
 bool CreateChoiceDialog::validateSituations()
@@ -159,19 +158,18 @@ bool CreateChoiceDialog::validateSituations()
     Situation *from = getSelectedSituation(m_FromComboBox);
     Situation *to = getSelectedSituation(m_ToComboBox);
 
-    auto errors = m_ChoiceValidator->validateSelectedSituations(from, to);
-    bool isValid = (errors.size() == 0);
+    auto result = m_ChoiceValidator->validateSelectedSituations(from, to);
 
-    if (isValid)
+    if (result.isCorrect())
     {
         hideSituationsValidationErrors();
     }
     else
     {
-        showSituationsValidationErrors(errors);
+        showSituationsValidationErrors(result.errors());
     }
 
-    return isValid;
+    return result.isCorrect();
 }
 
 void CreateChoiceDialog::showSituationsValidationErrors(QList<QString> errors)

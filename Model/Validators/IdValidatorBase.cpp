@@ -9,13 +9,13 @@ IdValidatorBase::~IdValidatorBase()
 {
 }
 
-QString IdValidatorBase::validateId(ContentModelBase *model, const QString &id) const
+ValidationResult IdValidatorBase::validateId(ContentModelBase *model, const QString &id) const
 {
-    QString error = "";
+    ValidationResult result;
 
     if (id == "")
     {
-        error = tr("Id is required");
+        result.addError(tr("Id is required"));
     }
     else
     {
@@ -23,10 +23,10 @@ QString IdValidatorBase::validateId(ContentModelBase *model, const QString &id) 
 
         if (modelWithSameId != nullptr && modelWithSameId != model)
         {
-            error = tr("Id is already used");
+            result.addError(tr("Id is already used"));
         }
     }
 
-    return error;
+    return result;
 }
 

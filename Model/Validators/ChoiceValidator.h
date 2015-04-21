@@ -15,7 +15,7 @@ class ChoiceValidator : public IdValidatorBase
 public:
     explicit ChoiceValidator(StoryManager *storyManager, QObject *parent = 0);
 
-    QList<QString> validateSelectedSituations(Situation *from, Situation *to) const;
+    ValidationResult validateSelectedSituations(Situation *from, Situation *to) const;
 
 protected:
     ContentModelBase *findItemWithId(const QString& id) const Q_DECL_OVERRIDE;

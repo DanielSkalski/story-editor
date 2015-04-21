@@ -10,22 +10,22 @@ ChoiceValidator::ChoiceValidator(StoryManager *storyManager, QObject *parent)
 {
 }
 
-QList<QString> ChoiceValidator::validateSelectedSituations(Situation *from, Situation *to) const
+ValidationResult ChoiceValidator::validateSelectedSituations(Situation *from, Situation *to) const
 {
-    QList<QString> result;
+    ValidationResult result;
 
     if (from == nullptr)
     {
-        result.append(tr("Situation 'from' must be selected"));
+        result.addError(tr("Situation 'from' must be selected"));
     }
 
     if (to == nullptr)
     {
-        result.append(tr("Situation 'to' must be selected"));
+        result.addError(tr("Situation 'to' must be selected"));
     }
     else if (to == from)
     {
-        result.append(tr("Situation 'to' must be different than 'from'"));
+        result.addError(tr("Situation 'to' must be different than 'from'"));
     }
 
     return result;

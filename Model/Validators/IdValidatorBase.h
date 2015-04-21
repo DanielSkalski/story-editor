@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include "IIdValidator.h"
+#include "ValidationResult.h"
 
 class IdValidatorBase : public QObject, public IIdValidator
 {
@@ -12,7 +13,7 @@ public:
     explicit IdValidatorBase(QObject *parent = 0);
     virtual ~IdValidatorBase();
 
-    QString validateId(ContentModelBase *, const QString &id) const Q_DECL_OVERRIDE;
+    ValidationResult validateId(ContentModelBase *, const QString &id) const Q_DECL_OVERRIDE;
 
 protected:
     virtual ContentModelBase *findItemWithId(const QString &id) const = 0;

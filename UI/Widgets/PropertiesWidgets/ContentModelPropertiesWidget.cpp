@@ -101,18 +101,16 @@ bool ContentModelPropertiesWidget::validateId()
     QString id = m_IdEdit->text();
     IIdValidator *validator = createIdValidator();
 
-    QString error = validator->validateId(m_Item, id);
+    auto result = validator->validateId(m_Item, id);
 
-    bool isValid = (error == "");
-
-    if (isValid)
+    if (result.isCorrect())
     {
        hideIdValidationError();
     }
     else
     {
-        showIdValidationError(error);
+        showIdValidationError(result.errors().first());
     }
 
-    return isValid;
+    return result.isCorrect();
 }
