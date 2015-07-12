@@ -22,15 +22,10 @@ StoryItemsListWidget::StoryItemsListWidget(StoryManager *storyManager, QWidget *
     m_CreateSituationButton = new QPushButton(tr("Create"), this);
     m_CreateChoiceButton = new QPushButton(tr("Create"), this);
 
-    auto choicesList = m_StoryManager->choices();
-    m_ChoiceListModel = new ChoiceListModel(choicesList);
-    m_ChoicesListView->setModel(m_ChoiceListModel);
-
-    auto situations = m_StoryManager->situations();
-    m_SituationListModel = new SituationListModel(situations);
-    m_SituationsListView->setModel(m_SituationListModel);
-
     setupLayout();
+
+    setupChoicesListView();
+    setupSituationsListView();
 
     connect(m_SituationsListView, SIGNAL(clicked(QModelIndex)), this, SLOT(onSituationClicked(QModelIndex)));
     connect(m_ChoicesListView, SIGNAL(clicked(QModelIndex)), this, SLOT(onChoiceClicked(QModelIndex)));
@@ -40,6 +35,8 @@ StoryItemsListWidget::StoryItemsListWidget(StoryManager *storyManager, QWidget *
 
     connect(m_StoryManager, SIGNAL(addedSituation(Situation*)), this, SLOT(addSituation(Situation*)));
     connect(m_StoryManager, SIGNAL(addedChoice(Choice*)), this, SLOT(addChoice(Choice *)));
+
+    connect(m_StoryManager, SIGNAL(loadedStory()), this, SLOT(onLoadedStory()));
 }
 
 StoryItemsListWidget::~StoryItemsListWidget()
@@ -73,6 +70,20 @@ void StoryItemsListWidget::setupLayout()
     setLayout(layout);
 }
 
+void StoryItemsListWidget::setupChoicesListView()
+{
+    auto choicesList = m_StoryManager->choices();
+    m_ChoiceListModel = new ChoiceListModel(choicesList);
+    m_ChoicesListView->setModel(m_ChoiceListModel);
+}
+
+void StoryItemsListWidget::setupSituationsListView()
+{
+    auto situations = m_StoryManager->situations();
+    m_SituationListModel = new SituationListModel(situations);
+    m_SituationsListView->setModel(m_SituationListModel);
+}
+
 void StoryItemsListWidget::markSituationAsSelected(Situation *situation)
 {
     m_ChoicesListView->clearSelection();
@@ -95,6 +106,15 @@ void StoryItemsListWidget::addSituation(Situation *situation)
 void StoryItemsListWidget::addChoice(Choice *choice)
 {
     m_ChoiceListModel->addItem(choice);
+}
+
+void StoryItemsListWidget::onLoadedStory()
+{
+    delete m_ChoiceListModel;
+    delete m_SituationListModel;
+
+    setupChoicesListView();
+    setupSituationsListView();
 }
 
 void StoryItemsListWidget::onSituationClicked(const QModelIndex &modelIndex)

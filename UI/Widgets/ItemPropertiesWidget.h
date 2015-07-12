@@ -33,6 +33,7 @@ signals:
 public slots:
     void showPropertiesOf(Situation *situation);
     void showPropertiesOf(Choice *choice);
+    void hideProperties();
 };
 
 #endif // ITEMPROPERTIESWIDGET_H

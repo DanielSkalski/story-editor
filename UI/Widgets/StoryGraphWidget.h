@@ -30,11 +30,11 @@ public:
     ~StoryGraphWidget();
 
 protected:
-    void drawBackground(QPainter *painter, const QRectF &rect) Q_DECL_OVERRIDE;
     void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
 
 private:
     void createNodesAndEdges();
+    void deleteNodesAndEdges();
     void markAsSelected(Selectable *item);
     void createSituationNode(Situation *situation);
     void createChoiceEdge(Choice *choice);
@@ -56,6 +56,7 @@ private slots:
 
     void onSituationNodeClicked(SituationNode *situationNode);
     void onChoiceEdgeClicked(ChoiceEdge *choiceEdge);
+    void onLoadedStory();
 };
 
 #endif // STORYGRAPHWIDGET_H

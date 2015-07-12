@@ -35,7 +35,12 @@ SOURCES += main.cpp\
     Model/Validators/ChoiceValidator.cpp \
     Model/Validators/ValidationResult.cpp \
     Model/Validators/SituationValidator.cpp \
-    Model/Validators/IdValidatorBase.cpp
+    Model/Validators/IdValidatorBase.cpp \
+    IO/StoryExporterBase.cpp \
+    IO/Exporters/Json/StoryJsonExporter.cpp \
+    IO/StoryFile/StoryFileReader.cpp \
+    IO/StoryFile/StoryFileWriter.cpp \
+    Model/Story.cpp
 
 HEADERS  += UI/mainwindow.h \
     UI/Widgets/StoryGraphWidget.h \
@@ -60,4 +65,9 @@ HEADERS  += UI/mainwindow.h \
     Model/Validators/IIdValidator.h \
     Model/Validators/SituationValidator.h \
     Model/Validators/IValidatorsProvider.h \
-    Model/Validators/IdValidatorBase.h
+    Model/Validators/IdValidatorBase.h \
+    IO/StoryExporterBase.h \
+    IO/Exporters/Json/StoryJsonExporter.h \
+    IO/StoryFile/StoryFileReader.h \
+    IO/StoryFile/StoryFileWriter.h \
+    Model/Story.h

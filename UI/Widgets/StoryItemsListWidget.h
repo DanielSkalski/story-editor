@@ -32,6 +32,8 @@ public:
 
 private:
     void setupLayout();
+    void setupChoicesListView();
+    void setupSituationsListView();
 
 signals:
     void situationClicked(Situation *situation);
@@ -46,6 +48,8 @@ public slots:
 
     void addSituation(Situation *situation);
     void addChoice(Choice *choice);
+
+    void onLoadedStory();
 
 private slots:
     void onSituationClicked(const QModelIndex &modelIndex);

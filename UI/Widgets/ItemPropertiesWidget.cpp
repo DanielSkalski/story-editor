@@ -54,3 +54,10 @@ void ItemPropertiesWidget::showPropertiesOf(Choice *choice)
     m_ChoiceProperties->showPropertiesOf(choice);
     m_ChoiceProperties->show();
 }
+
+void ItemPropertiesWidget::hideProperties()
+{
+    m_Current = nullptr;
+    m_SituationProperties->hide();
+    m_ChoiceProperties->hide();
+}

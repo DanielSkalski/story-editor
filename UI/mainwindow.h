@@ -7,12 +7,17 @@ class StoryGraphWidget;
 class ItemPropertiesWidget;
 class StoryItemsListWidget;
 class StoryManager;
+class StoryFileWriter;
+class StoryFileReader;
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
     StoryManager *m_StoryManager;
+
+    StoryFileWriter *m_StoryFileWriter;
+    StoryFileReader *m_StoryFileReader;
 
     StoryGraphWidget *m_StoryGraphWidget;
     ItemPropertiesWidget *m_ItemPropertiesWidget;
@@ -24,6 +29,7 @@ class MainWindow : public QMainWindow
     QMenu *helpMenu;
 
     QAction *newStoryAction;
+    QAction *openAction;
     QAction *saveAction;
     QAction *saveAsAction;
     QAction *exportToJsonAction;
@@ -44,6 +50,7 @@ private:
 
 private slots:
     void newStory();
+    void open();
     void save();
     void saveAs();
     void exportToJson();

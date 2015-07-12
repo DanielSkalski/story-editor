@@ -5,16 +5,24 @@
 #include <QMenu>
 #include <QtWidgets>
 
+#include "IO/StoryFile/StoryFileWriter.h"
+#include "IO/StoryFile/StoryFileReader.h"
+
 #include "Widgets/StoryGraphWidget.h"
 #include "Widgets/ItemPropertiesWidget.h"
 #include "Widgets/StoryItemsListWidget.h"
 #include "Model/StoryManager.h"
+#include "Model/Story.h"
 #include "Dialogs/CreateChoiceDialog.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    m_StoryManager = new StoryManager();
+    m_StoryManager = new StoryManager(this);
+    m_StoryManager->load(Story::createEmptyStory());
+
+    m_StoryFileWriter = new StoryFileWriter(this);
+    m_StoryFileReader = new StoryFileReader(this);
 
     m_StoryGraphWidget = new StoryGraphWidget(m_StoryManager, this);
     m_ItemPropertiesWidget = new ItemPropertiesWidget(m_StoryManager, this);
@@ -29,6 +37,9 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowTitle(tr("Story Editor"));
 
     setUnifiedTitleAndToolBarOnMac(true);
+
+    connect(m_StoryManager, SIGNAL(loadedStory()),
+            m_ItemPropertiesWidget, SLOT(hideProperties()));
 
     connect(m_StoryGraphWidget, SIGNAL(situationSelectionChanged(Situation*)),
             m_ItemPropertiesWidget, SLOT(showPropertiesOf(Situation*)));
@@ -59,7 +70,6 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-    delete m_StoryManager;
 }
 
 void MainWindow::createActions()
@@ -67,6 +77,10 @@ void MainWindow::createActions()
     newStoryAction = new QAction(tr("&New story"), this);
     newStoryAction->setShortcut(QKeySequence::New);
     connect(newStoryAction, SIGNAL(triggered()), this, SLOT(newStory()));
+
+    openAction = new QAction(tr("&Open"), this);
+    openAction->setShortcut(QKeySequence::Open);
+    connect(openAction, SIGNAL(triggered()), this, SLOT(open()));
 
     saveAction = new QAction(tr("&Save"), this);
     saveAction->setShortcut(QKeySequence::Save);
@@ -97,8 +111,11 @@ void MainWindow::createMenus()
 {
     fileMenu = menuBar()->addMenu(tr("&File"));
     fileMenu->addAction(newStoryAction);
+    fileMenu->addAction(openAction);
+    fileMenu->addSeparator();
     fileMenu->addAction(saveAction);
     fileMenu->addAction(saveAsAction);
+    fileMenu->addSeparator();
     fileMenu->addAction(exportToJsonAction);
     fileMenu->addSeparator();
     fileMenu->addAction(quitAction);
@@ -130,12 +147,26 @@ void MainWindow::createDockWindows()
 
 void MainWindow::newStory()
 {
+    m_StoryManager->load(Story::createEmptyStory());
+}
+
+void MainWindow::open()
+{
 
 }
 
 void MainWindow::save()
 {
+    QString filename = QFileDialog::getSaveFileName(
+                this,
+                tr("Save Story"),
+                QString(),
+                "Story files (*.stf)");
 
+    if (!filename.isEmpty())
+    {
+        m_StoryFileWriter->write(filename, m_StoryManager->story());
+    }
 }
 
 void MainWindow::saveAs()

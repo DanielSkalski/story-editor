@@ -4,6 +4,7 @@
 #include <QObject>
 #include "Model/Validators/IValidatorsProvider.h"
 
+class Story;
 class Choice;
 class Situation;
 class ChoiceValidator;
@@ -14,20 +15,24 @@ class StoryManager : public QObject, public IValidatorsProvider
 {
     Q_OBJECT
 
+    Story *m_Story;
+
     QList<Situation *> m_Situations;
     QList<Choice *> m_Choices;
-
-    int m_NextAvailableSituationNumber;
 
     ChoiceValidator *m_ChoiceValidator;
     SituationValidator *m_SituationValidator;
 
 public:
-    StoryManager();
+    explicit StoryManager(QObject *parent = 0);
     virtual ~StoryManager();
 
+    Story *story() const;
     QList<Situation *> situations() const;
     QList<Choice *> choices() const;
+
+    void load(Story* story);
+    void unload();
 
     Situation *findSituationById(const QString &id) const;
     Choice *findChoiceById(const QString& id) const;
@@ -41,6 +46,7 @@ private:
 signals:
     void addedSituation(Situation *situation);
     void addedChoice(Choice *choice);
+    void loadedStory();
 
 public slots:
     void addSituation(Situation *situation);

@@ -29,6 +29,9 @@ StoryGraphWidget::StoryGraphWidget(StoryManager *storyManager, QWidget *parent)
 
     connect(m_StoryManager, SIGNAL(addedChoice(Choice*)),
             this, SLOT(addChoice(Choice*)));
+
+    connect(m_StoryManager, SIGNAL(loadedStory()),
+            this, SLOT(onLoadedStory()));
 }
 
 void StoryGraphWidget::createNodesAndEdges()
@@ -44,29 +47,30 @@ void StoryGraphWidget::createNodesAndEdges()
     }
 }
 
-StoryGraphWidget::~StoryGraphWidget()
+void StoryGraphWidget::deleteNodesAndEdges()
 {
+    for (auto edge : m_ChoiceEdges)
+    {
+        disconnect(edge->choice());
+        disconnect(edge);
+        delete edge;
+    }
+    m_ChoiceEdges.clear();
 
+    for (auto node : m_SituationNodes)
+    {
+        disconnect(node->situation());
+        disconnect(node);
+        delete node;
+    }
+    m_SituationNodes.clear();
+
+    m_Scene->clear();
 }
 
-void StoryGraphWidget::drawBackground(QPainter *painter, const QRectF &rect)
+StoryGraphWidget::~StoryGraphWidget()
 {
-    // Shadow
-    QRectF sceneRect = this->sceneRect();
-    QRectF rightShadow(sceneRect.right(), sceneRect.top() + 5, 5, sceneRect.height());
-    QRectF bottomShadow(sceneRect.left() + 5, sceneRect.bottom(), sceneRect.width(), 5);
-    if (rightShadow.intersects(rect) || rightShadow.contains(rect))
-        painter->fillRect(rightShadow, Qt::darkGray);
-    if (bottomShadow.intersects(rect) || bottomShadow.contains(rect))
-        painter->fillRect(bottomShadow, Qt::darkGray);
-
-    // Fill
-    QLinearGradient gradient(sceneRect.topLeft(), sceneRect.bottomRight());
-    gradient.setColorAt(0, Qt::white);
-    gradient.setColorAt(1, Qt::lightGray);
-    painter->fillRect(rect.intersected(sceneRect), gradient);
-    painter->setBrush(Qt::NoBrush);
-    painter->drawRect(sceneRect);
+    deleteNodesAndEdges();
 }
 
 void StoryGraphWidget::contextMenuEvent(QContextMenuEvent *event)
@@ -197,4 +201,12 @@ void StoryGraphWidget::onChoiceEdgeClicked(ChoiceEdge *choiceEdge)
 {
     auto choice = choiceEdge->choice();
     markChoiceAsSelected(choice);
+}
+
+void StoryGraphWidget::onLoadedStory()
+{
+    m_CurrentlySelectedItem = nullptr;
+
+    deleteNodesAndEdges();
+    createNodesAndEdges();
 }
